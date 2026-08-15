@@ -1,0 +1,20 @@
+# generated readings: the Spanish text is a copyrighted translation, don't redistribute it
+*.json
+hoy.json
+today.json
+
+# superseded build output, docs/ is the live one
+site/
+
+# local audio and video work
+*.wav
+*.mp3
+*.mp4
+*.pth
+*.index
+dataset/
+separated/
+voz/
+
+.DS_Store
+__pycache__/

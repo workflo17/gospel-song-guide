@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Daily Spanish Gospel to song to YouTube pipeline, and the Mac setup walkthrough.">
+<title>Teaching guide: the Mac build, session by session</title>
+</head>
+<body>
+
+
+<style>
+  /* ---- tokens: light is the base, both dark states re-declare the same set ---- */
+  :root {
+    --paper:      #F6F3F1;
+    --surface:    #EFEAE6;
+    --sunken:     #E7E0DA;
+    --ink:        #1B1614;
+    --ink-soft:   #5C534E;
+    --ink-faint:  #736860;
+    --rubric:     #A81F16;
+    --rubric-bg:  #F6E7E4;
+    --gilt:       #8A6B2C;
+    --rule:       #D6CCC4;
+    --rule-hard:  #B8AAA0;
+    --ok:         #3F6B45;
+    --ok-bg:      #E6EDE6;
+    --warn:       #9A6210;
+    --term-bg:    #221B18;
+    --term-ink:   #D9CFC7;
+    --term-dim:   #988B82;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:      #17110F;
+      --surface:    #201917;
+      --sunken:     #120D0C;
+      --ink:        #EDE5DF;
+      --ink-soft:   #B3A79F;
+      --ink-faint:  #928279;
+      --rubric:     #E8756A;
+      --rubric-bg:  #2E1A18;
+      --gilt:       #C9A961;
+      --rule:       #352925;
+      --rule-hard:  #4A3B35;
+      --ok:         #7FB388;
+      --ok-bg:      #1A241B;
+      --warn:       #D9A24E;
+      --term-bg:    #0D0908;
+      --term-ink:   #D9CFC7;
+      --term-dim:   #8C7F76;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:      #17110F;
+    --surface:    #201917;
+    --sunken:     #120D0C;
+    --ink:        #EDE5DF;
+    --ink-soft:   #B3A79F;
+    --ink-faint:  #928279;
+    --rubric:     #E8756A;
+    --rubric-bg:  #2E1A18;
+    --gilt:       #C9A961;
+    --rule:       #352925;
+    --rule-hard:  #4A3B35;
+    --ok:         #7FB388;
+    --ok-bg:      #1A241B;
+    --warn:       #D9A24E;
+    --term-bg:    #0D0908;
+    --term-ink:   #D9CFC7;
+    --term-dim:   #8C7F76;
+  }
+
+  :root {
+    --serif: "Palatino Linotype", "Iowan Old Style", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Cascadia Mono", "JetBrains Mono", Consolas, "SF Mono", Menlo, monospace;
+    --measure: 68ch;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 16.5px; line-height: 1.62;
+    margin: 0; padding: 0 1.5rem 6rem; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 62rem; margin: 0 auto; }
+
+  /* ---------------- masthead ---------------- */
+  .masthead { padding: 4.5rem 0 0; }
+  .eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.19em; text-transform: uppercase;
+    color: var(--rubric); font-weight: 600; margin: 0 0 1.4rem;
+  }
+  h1 {
+    font-family: var(--serif); font-size: clamp(2.1rem, 5vw, 3.2rem);
+    line-height: 1.08; font-weight: 400; margin: 0 0 1rem;
+    letter-spacing: -0.015em; text-wrap: balance; max-width: 20ch;
+  }
+  h1 em { font-style: italic; color: var(--rubric); }
+  .standfirst {
+    font-family: var(--serif); font-size: 1.2rem; line-height: 1.55;
+    color: var(--ink-soft); max-width: 54ch; margin: 0 0 2rem;
+  }
+
+  .double-rule { border: 0; margin: 3.5rem 0; height: 4px; position: relative; }
+  .double-rule::before, .double-rule::after {
+    content: ""; position: absolute; left: 0; right: 0; background: var(--rule-hard);
+  }
+  .double-rule::before { top: 0; height: 2px; }
+  .double-rule::after  { top: 3px; height: 1px; }
+
+  .meta-strip {
+    display: flex; flex-wrap: wrap; gap: 0 2.2rem;
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 0.9rem 0; font-size: 0.8rem; color: var(--ink-faint);
+  }
+  .meta-strip b { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------------- type ---------------- */
+  h2 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(1.5rem, 3vw, 1.95rem); line-height: 1.18;
+    margin: 0 0 0.4rem; letter-spacing: -0.01em; text-wrap: balance;
+  }
+  h3 {
+    font-family: var(--sans); font-size: 1.02rem; font-weight: 650;
+    margin: 2rem 0 0.5rem; letter-spacing: -0.005em;
+  }
+  h4 {
+    font-family: var(--sans); font-size: 0.73rem; font-weight: 700;
+    letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-faint);
+    margin: 1.7rem 0 0.55rem;
+  }
+  p, li { max-width: var(--measure); }
+  p { margin: 0 0 1.05rem; }
+  ul, ol { margin: 0 0 1.15rem; padding-left: 1.25rem; }
+  li { margin-bottom: 0.42rem; }
+  a { color: var(--rubric); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--rubric); outline-offset: 3px; border-radius: 2px;
+  }
+  strong { font-weight: 650; }
+  code {
+    font-family: var(--mono); font-size: 0.86em; background: var(--sunken);
+    padding: 0.1em 0.34em; border-radius: 3px; border: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: var(--serif); font-style: italic; font-size: 1.05rem;
+    color: var(--gilt); margin: 0 0 1.6rem; max-width: 56ch;
+  }
+
+  /* ---------------- sessions (order is real: each gates the next) ------- */
+  .session { display: grid; grid-template-columns: 4.2rem 1fr; gap: 0 1.4rem; margin: 0 0 3.4rem; }
+  .session-num {
+    font-family: var(--serif); font-size: 2.4rem; line-height: 1; color: var(--gilt);
+    font-variant-numeric: tabular-nums; padding-top: 0.15rem;
+  }
+  .session-body { min-width: 0; }
+  .timebox {
+    display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--ink-faint); border: 1px solid var(--rule-hard);
+    padding: 0.16rem 0.5rem; border-radius: 2px; margin-bottom: 0.7rem;
+  }
+  .who {
+    display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.11em;
+    text-transform: uppercase; padding: 0.16rem 0.5rem; border-radius: 2px;
+    margin: 0 0 0.7rem 0.4rem; color: var(--rubric); background: var(--rubric-bg);
+  }
+  @media (max-width: 640px) {
+    .session { grid-template-columns: 1fr; gap: 0; }
+    .session-num { font-size: 1.8rem; margin-bottom: 0.3rem; }
+  }
+
+  /* ---------------- rubric ---------------- */
+  .rubric {
+    border-left: 3px solid var(--rubric); background: var(--rubric-bg);
+    padding: 0.95rem 1.15rem; margin: 1.3rem 0; max-width: var(--measure);
+  }
+  .rubric-label {
+    display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--rubric); margin-bottom: 0.4rem;
+  }
+  .rubric p { margin: 0; font-size: 0.94rem; }
+  .rubric p + p { margin-top: 0.6rem; }
+
+  .note {
+    border-left: 2px solid var(--rule-hard); padding: 0.15rem 0 0.15rem 1.05rem;
+    margin: 1.3rem 0; color: var(--ink-soft); font-size: 0.94rem; max-width: var(--measure);
+  }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 0.55rem; }
+
+  /* ---------------- checkpoint: the "did it work" gate ---------------- */
+  .checkpoint {
+    border: 1px solid var(--ok); background: var(--ok-bg);
+    padding: 0.9rem 1.15rem; margin: 1.4rem 0; max-width: var(--measure);
+    border-radius: 3px;
+  }
+  .checkpoint-label {
+    display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--ok); margin-bottom: 0.4rem;
+  }
+  .checkpoint p { margin: 0; font-size: 0.94rem; }
+  .checkpoint code { background: transparent; border-color: var(--ok); }
+
+  /* ---------------- code + terminal ---------------- */
+  pre {
+    font-family: var(--mono); font-size: 0.795rem; line-height: 1.62;
+    background: var(--sunken); border: 1px solid var(--rule);
+    padding: 1rem 1.15rem; overflow-x: auto; margin: 0 0 1.2rem;
+    border-radius: 3px; color: var(--ink);
+  }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+  pre.term {
+    background: var(--term-bg); color: var(--term-ink); border-color: var(--term-bg);
+  }
+  pre.term .dim { color: var(--term-dim); }
+  .cap { font-size: 0.76rem; color: var(--ink-faint); margin: -0.75rem 0 1.4rem; max-width: var(--measure); }
+
+  /* ---------------- tables ---------------- */
+  .tbl-scroll { overflow-x: auto; margin: 0 0 0.6rem; border-bottom: 1px solid var(--rule); }
+  table { border-collapse: collapse; width: 100%; min-width: 38rem; font-size: 0.855rem; }
+  th {
+    text-align: left; font-size: 0.68rem; letter-spacing: 0.11em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700; padding: 0 0.85rem 0.55rem 0;
+    border-bottom: 1.5px solid var(--rule-hard); white-space: nowrap;
+  }
+  td { padding: 0.62rem 0.85rem 0.62rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child, th:first-child { padding-left: 0; }
+  .yes { color: var(--ok); font-weight: 650; }
+  .no  { color: var(--rubric); font-weight: 650; }
+  .pick td { background: var(--rubric-bg); }
+  .pick td:first-child { box-shadow: inset 3px 0 0 var(--rubric); padding-left: 0.7rem; }
+
+  /* ---------------- misc ---------------- */
+  .split { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.6rem; margin: 1.5rem 0 2rem; }
+  .card { background: var(--surface); border: 1px solid var(--rule); padding: 1.2rem 1.3rem; border-radius: 3px; }
+  .card h3 { margin-top: 0; }
+  .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+  .card ul { padding-left: 1.1rem; }
+
+  details { border-top: 1px solid var(--rule); padding: 0.85rem 0; max-width: var(--measure); }
+  summary { cursor: pointer; font-weight: 600; font-size: 0.94rem; }
+  details[open] summary { margin-bottom: 0.8rem; color: var(--rubric); }
+
+  footer {
+    margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
+    font-size: 0.8rem; color: var(--ink-faint); max-width: var(--measure);
+  }
+
+  .sitenav {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--paper); border-bottom: 1px solid var(--rule);
+    margin: 0 -1.5rem 0; padding: 0 1.5rem;
+  }
+  .sitenav-inner {
+    max-width: 62rem; margin: 0 auto; display: flex; align-items: baseline;
+    gap: 1.5rem; padding: 0.85rem 0; flex-wrap: wrap;
+  }
+  .sitenav .brand {
+    font-family: var(--serif); font-size: 0.95rem; color: var(--ink);
+    margin-right: auto; text-decoration: none;
+  }
+  .sitenav a.tab {
+    font-size: 0.78rem; font-weight: 650; letter-spacing: 0.06em;
+    text-transform: uppercase; text-decoration: none; color: var(--ink-faint);
+    padding: 0.2rem 0; border-bottom: 2px solid transparent;
+  }
+  .sitenav a.tab:hover { color: var(--ink); }
+  .sitenav a.tab[aria-current="page"] { color: var(--rubric); border-bottom-color: var(--rubric); }
+  .masthead { padding-top: 3rem; }
+</style>
+
+<nav class="sitenav"><div class="sitenav-inner"><a class="brand" href="index.html">Evangelio del D&iacute;a</a><a class="tab" href="index.html">The pipeline</a><a class="tab" href="mac.html" aria-current="page">Mac setup</a></div></nav>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Companion to the pipeline plan &middot; macOS</p>
+    <h1>Teaching guide:<br><em>the Mac build</em></h1>
+    <p class="standfirst">
+      Eight sittings, in order, each one ending in a check that either passes or fails.
+      Written to be taught from: the left column says how long and who does it.
+    </p>
+    <div class="meta-strip">
+      <span><b>For</b> Apple Silicon Macs</span>
+      <span><b>Shell</b> zsh</span>
+      <span><b>Total hands-on</b> about 4 hours</span>
+      <span><b>Spread over</b> 2 or 3 evenings</span>
+    </div>
+  </header>
+
+  <hr class="double-rule">
+
+  <section>
+    <h2>The one thing that is different on a Mac</h2>
+    <p class="kicker">Get this wrong and he spends a night watching a progress bar that was never going to finish.</p>
+    <p>
+      Everything in this build runs on a Mac except <strong>one step</strong>: training the singing
+      voice model. RVC training does not properly use the Apple GPU. It silently falls back to the
+      CPU, and people report six hours or more for a thirty minute dataset on an M1 Pro.
+    </p>
+    <p>
+      So the split is: <strong>train once in the cloud, run every day on the Mac.</strong> Training
+      happens on a free Google Colab GPU in about an hour. The trained voice is two small files he
+      downloads and keeps forever. Daily conversion then runs locally in seconds.
+    </p>
+    <div class="rubric">
+      <span class="rubric-label">Do not let him try to train locally</span>
+      <p>
+        It will appear to be working. It starts, it prints epochs, it never meaningfully progresses.
+        This is the single most likely way for him to give up on the project in week one.
+      </p>
+    </div>
+  </section>
+
+  <hr class="double-rule">
+
+  <!-- ============ 0 ============ -->
+  <div class="session">
+    <div class="session-num">0</div>
+    <div class="session-body">
+      <h2>Find out which Mac he has</h2>
+      <span class="timebox">5 minutes</span><span class="who">Him, on a call</span>
+      <p>
+        Apple menu, <strong>About This Mac</strong>. Two numbers matter: the <strong>chip</strong> and
+        the <strong>memory</strong>. Everything after this branches on them.
+      </p>
+
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>What he has</th><th>Music generation</th><th>Voice conversion</th><th>Plan</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Intel Mac</strong></td>
+              <td class="no">Not viable</td><td class="no">Not viable</td>
+              <td>Everything in Colab, Mac is just for editing and upload. Skip sessions 6 and 7.</td>
+            </tr>
+            <tr>
+              <td><strong>M-series, 8 GB</strong></td>
+              <td class="no">Will run out of memory</td><td class="yes">Fine</td>
+              <td>Music in Colab, conversion and video locally.</td>
+            </tr>
+            <tr class="pick">
+              <td><strong>M-series, 16 GB</strong></td>
+              <td class="yes">Yes, small model</td><td class="yes">Fine</td>
+              <td>Everything local. Use the 0.6B language model, not the bigger ones.</td>
+            </tr>
+            <tr>
+              <td><strong>M2 Pro or better, 32 GB+</strong></td>
+              <td class="yes">Yes, any model</td><td class="yes">Fast</td>
+              <td>Everything local, no compromises.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cap">
+        For reference on speed: an M2 Max renders roughly 26 seconds of compute per minute of finished
+        audio, so a 3 and a half minute song lands in about a minute and a half. An M1 Max is close behind.
+      </p>
+
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>He can tell you the chip name and the memory figure. Write both down before continuing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 1 ============ -->
+  <div class="session">
+    <div class="session-num">1</div>
+    <div class="session-body">
+      <h2>Foundations: Terminal, Homebrew, ffmpeg</h2>
+      <span class="timebox">30 minutes</span><span class="who">Screen share</span>
+      <p>
+        Open <strong>Terminal</strong> (Command+Space, type "Terminal"). Everything below is typed
+        there. His shell is zsh, which is the modern Mac default.
+      </p>
+
+      <h4>Step 1a &middot; Xcode command line tools</h4>
+      <p>Nothing else installs without these. A dialog box will appear, click Install, then wait.</p>
+<pre><code>xcode-select --install</code></pre>
+      <p class="cap">If it says "already installed", that is a pass, move on.</p>
+
+      <h4>Step 1b &middot; Homebrew</h4>
+<pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+
+      <div class="rubric">
+        <span class="rubric-label">The step everyone misses</span>
+        <p>
+          On Apple Silicon, Homebrew installs to <code>/opt/homebrew</code>, which is not on the path
+          by default. At the end of the install it prints two lines under "Next steps". <strong>Those
+          lines must actually be run.</strong> If they are skipped, every later command fails with
+          "command not found" and it looks like the install failed when it did not.
+        </p>
+      </div>
+
+<pre><code>echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' &gt;&gt; ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"</code></pre>
+
+      <h4>Step 1c &middot; The three tools everything else needs</h4>
+<pre><code>brew install python@3.12 ffmpeg git</code></pre>
+      <p class="cap">ffmpeg is the video renderer. It is a 300 MB install with its dependencies, so this takes a few minutes.</p>
+
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>All three of these print a version number rather than "command not found":</p>
+      </div>
+<pre class="term"><code>$ brew --version
+<span class="dim">Homebrew 4.x.x</span>
+$ python3 --version
+<span class="dim">Python 3.12.x</span>
+$ ffmpeg -version
+<span class="dim">ffmpeg version 7.x.x ...</span></code></pre>
+
+      <details>
+        <summary>If "command not found" appears anyway</summary>
+        <p>
+          Close Terminal completely (Command+Q, not just the window) and reopen it. The
+          <code>~/.zprofile</code> line only takes effect in a new session. If it still fails, run
+          <code>cat ~/.zprofile</code> and confirm the brew line is actually in there.
+        </p>
+      </details>
+    </div>
+  </div>
+
+  <!-- ============ 2 ============ -->
+  <div class="session">
+    <div class="session-num">2</div>
+    <div class="session-body">
+      <h2>Prove the Gospel feed works</h2>
+      <span class="timebox">10 minutes</span><span class="who">Screen share</span>
+      <p>
+        This needs no GPU and no AI. Do it early because it is a guaranteed win and it makes the whole
+        thing feel real.
+      </p>
+
+<pre><code>mkdir -p ~/gospel-song &amp;&amp; cd ~/gospel-song</code></pre>
+      <p>
+        Put <code>gospel.py</code> in that folder (send it to him, or paste it in with
+        <code>nano gospel.py</code>, then Control+O, Return, Control+X to save and exit). Then:
+      </p>
+<pre><code>python3 gospel.py --out hoy.json</code></pre>
+
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>He sees today's Gospel citation and the commentary author, in Spanish:</p>
+      </div>
+<pre class="term"><code>$ python3 gospel.py --out hoy.json
+<span class="dim">2026-08-15 [SP] -&gt; hoy.json
+  gospel     Lc 1,39-56.  (1523 chars)
+  commentary Beato Columba Marmion (1858-1923), abad  (1403 chars)</span></code></pre>
+
+      <div class="note">
+        <p>
+          If it fails with a certificate error, that is antivirus software intercepting HTTPS. Run
+          <code>pip3 install truststore</code> and try again. The script picks it up automatically.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 3 ============ -->
+  <div class="session">
+    <div class="session-num">3</div>
+    <div class="session-body">
+      <h2>Set up the Grok automation</h2>
+      <span class="timebox">15 minutes</span><span class="who">Him, alone</span>
+      <p>
+        No installing. In the Grok app or on grok.com: <strong>Automations</strong>, new task, paste
+        the Spanish prompt from the pipeline plan, set it to run <strong>daily at 05:00</strong> in his
+        timezone, delivery by <strong>email</strong>.
+      </p>
+      <p>
+        This needs a paid Grok tier, either X Premium+ or a grok.com subscription. Free accounts do not
+        get Automations.
+      </p>
+
+      <div class="rubric">
+        <span class="rubric-label">Then stop and wait three days</span>
+        <p>
+          Do not install anything else yet. Let it email him for three mornings and read the lyrics
+          properly. If the songs are not good, the problem is the prompt, and fixing a prompt costs
+          nothing while fixing a prompt after building a pipeline around it costs a weekend.
+        </p>
+      </div>
+
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>Three emails arrive on three consecutive mornings, each with all seven <code>===SECTION===</code> blocks present.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 4 ============ -->
+  <div class="session">
+    <div class="session-num">4</div>
+    <div class="session-body">
+      <h2>Record the voice dataset</h2>
+      <span class="timebox">45 minutes</span><span class="who">Him, alone</span>
+      <p>
+        This is the one step where the quality of his effort decides the quality of the final result,
+        and it only has to happen once. He is not performing, he is giving the model material.
+      </p>
+
+      <h4>What to record</h4>
+      <ul>
+        <li><strong>10 to 30 minutes of him singing.</strong> Singing, not talking. The model learns his timbre across his pitch range, and a speech-only dataset produces a thin, strained sound on high notes.</li>
+        <li><strong>Solo and dry.</strong> No backing track, no reverb, no autotune, no room echo. If a backing track bleeds in, the model learns the backing track too.</li>
+        <li><strong>Cover his whole range.</strong> Low verses and high choruses. Whatever he never records, the model has to guess.</li>
+        <li><strong>Same mic, same room, one sitting.</strong> Consistency beats quality here. A decent USB mic or even AirPods in a quiet room beats a great mic in three different rooms.</li>
+      </ul>
+
+      <h4>How to record it</h4>
+      <p>
+        <strong>GarageBand</strong> is already on his Mac and is more than enough. New project, Voice
+        track, turn every effect and preset off, record. Export with Share, Export Song to Disk, and
+        choose <strong>WAV</strong>, not MP3.
+      </p>
+
+      <h4>Then cut it into clips</h4>
+<pre><code>cd ~/gospel-song
+mkdir -p dataset
+ffmpeg -i canto_crudo.wav -f segment -segment_time 10 \
+  -ac 1 -ar 44100 -c:a pcm_s16le dataset/voz_%03d.wav</code></pre>
+      <p class="cap">Ten second slices, mono, 44.1 kHz. Afterwards he should delete any clip that is silence, coughing, or a false start.</p>
+
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p><code>ls dataset | wc -l</code> shows at least 60 files, and playing three at random gives clean solo singing with no background noise.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 5 ============ -->
+  <div class="session">
+    <div class="session-num">5</div>
+    <div class="session-body">
+      <h2>Train the voice in Colab, not on the Mac</h2>
+      <span class="timebox">20 minutes hands-on, then about an hour of waiting</span><span class="who">Screen share</span>
+
+      <p>
+        Zip the dataset folder, upload it to his Google Drive, then open the <strong>Applio Colab
+        notebook</strong> from the Applio repository. It runs on Google's free T4 GPU.
+      </p>
+<pre><code>cd ~/gospel-song
+zip -r dataset.zip dataset</code></pre>
+
+      <h4>In the notebook</h4>
+      <ol>
+        <li>Runtime, Change runtime type, select <strong>T4 GPU</strong>. Do this before running any cell.</li>
+        <li>Run the install cell. It takes a few minutes.</li>
+        <li>Mount Drive and point the training cell at <code>dataset.zip</code>.</li>
+        <li>Name the model something he will recognise in a year, not "test1".</li>
+        <li>Sample rate <strong>40k</strong>, around <strong>300 epochs</strong>, save every 50.</li>
+        <li>Train. Check back in an hour.</li>
+      </ol>
+
+      <div class="rubric">
+        <span class="rubric-label">Free Colab disconnects</span>
+        <p>
+          Free sessions get reclaimed if the tab is idle, so he should leave it open and touch it
+          occasionally. This is exactly why saving every 50 epochs matters: a disconnect at epoch 240
+          costs him one checkpoint, not the whole run.
+        </p>
+      </div>
+
+      <h4>What to download when it finishes</h4>
+      <p>
+        Two files, and they are the entire point of this session: a <code>.pth</code> and an
+        <code>.index</code>. Put them in <code>~/gospel-song/voz/</code> on the Mac and back them up
+        somewhere. That pair is his voice, reusable forever, and regenerating it means redoing the
+        recording session.
+      </p>
+
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>Both files sit in <code>~/gospel-song/voz/</code> and the <code>.pth</code> is somewhere in the region of 50 to 200 MB. A file of a few kilobytes means the training did not actually complete.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 6 ============ -->
+  <div class="session">
+    <div class="session-num">6</div>
+    <div class="session-body">
+      <h2>Install the two local apps</h2>
+      <span class="timebox">30 minutes, plus a long download</span><span class="who">Screen share</span>
+      <p>Skip this session entirely if he is on an Intel Mac or 8 GB. Use Colab for music instead.</p>
+
+      <h4>Applio, for daily voice conversion</h4>
+<pre><code>cd ~
+git clone https://github.com/IAHispano/Applio.git
+cd Applio
+chmod +x run-install.sh run-applio.sh
+./run-install.sh</code></pre>
+      <p>Then to start it, now and every time after:</p>
+<pre><code>cd ~/Applio &amp;&amp; ./run-applio.sh</code></pre>
+      <p class="cap">A browser tab opens with the interface. He loads the <code>.pth</code> and <code>.index</code> from session 5 under Inference.</p>
+
+      <h4>ACE-Step 1.5, for the music</h4>
+<pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh
+cd ~
+git clone https://github.com/ace-step/ACE-Step-1.5.git
+cd ACE-Step-1.5
+uv sync
+chmod +x start_gradio_ui_macos.sh
+./start_gradio_ui_macos.sh</code></pre>
+      <p>
+        Use the <strong>macos</strong> script specifically. It sets Apple's MLX backend for the language
+        model and PyTorch's Metal backend for the audio model. The plain
+        <code>start_gradio_ui.sh</code> assumes an NVIDIA card and will fail.
+      </p>
+      <p>
+        First launch downloads several gigabytes of model weights. Start it and go and do something
+        else. The interface then opens at <code>http://localhost:7860</code>.
+      </p>
+
+      <div class="rubric">
+        <span class="rubric-label">On a 16 GB Mac, pick the small language model</span>
+        <p>
+          There is a choice of 0.6B, 1.7B, and 4B. The <strong>0.6B</strong> runs without running out
+          of memory on any M-series Mac with 16 GB. The larger ones will crash it.
+        </p>
+        <p>
+          If a memory error appears anyway, adding <code>PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0</code>
+          removes the allocation ceiling, but it also removes a protection that stops a runaway process
+          taking down macOS itself. Try the smaller model first.
+        </p>
+      </div>
+
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>Both interfaces open in a browser, and ACE-Step produces a listenable 30 second test clip from any prompt.</p>
+      </div>
+
+      <details>
+        <summary>If macOS blocks something as unverified</summary>
+        <p>
+          Right-click the file and choose Open rather than double-clicking it, or go to System Settings,
+          Privacy and Security, and click "Open Anyway" next to the blocked item. Gatekeeper stops
+          unsigned downloads by default.
+        </p>
+      </details>
+    </div>
+  </div>
+
+  <!-- ============ 7 ============ -->
+  <div class="session">
+    <div class="session-num">7</div>
+    <div class="session-body">
+      <h2>The daily loop</h2>
+      <span class="timebox">About 15 minutes a day</span><span class="who">Him, alone</span>
+      <p>Once, slowly, together. Then it is his.</p>
+
+      <ol>
+        <li><strong>Read the email.</strong> Change at least one line of the lyric so it sounds like him. This is not optional, and session 8 explains why.</li>
+        <li><strong>ACE-Step.</strong> Paste the <code>===LETRA===</code> block into lyrics and the <code>===ESTILO===</code> block into style. Generate three takes and keep the best one.</li>
+        <li><strong>Split the vocal from the music.</strong>
+<pre><code>cd ~/gospel-song
+python3 -m demucs --two-stems=vocals cancion.wav</code></pre></li>
+        <li><strong>Applio.</strong> Convert <code>vocals.wav</code> using his voice model. Output <code>voz_clonada.wav</code>.</li>
+        <li><strong>Mix it back together.</strong>
+<pre><code>ffmpeg -i separated/htdemucs/cancion/no_vocals.wav -i voz_clonada.wav \
+  -filter_complex "[1:a]volume=1.15[v];[0:a][v]amix=inputs=2:duration=longest" \
+  -c:a pcm_s16le final.wav</code></pre></li>
+        <li><strong>Record a spoken intro in his real voice.</strong> Twenty to thirty seconds. Voice Memos is fine.</li>
+        <li><strong>Time the lyrics and render the video.</strong>
+<pre><code>pip3 install whisperx
+whisperx final.wav --language es --model medium --output_format ass
+
+ffmpeg -loop 1 -i fondo.jpg -i final.wav \
+  -vf "scale=3840:-2,\
+zoompan=z='min(zoom+0.00015,1.18)':d=25*215:\
+x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s=1920x1080:fps=25,\
+subtitles=final.ass" \
+  -c:v libx264 -preset medium -crf 18 -pix_fmt yuv420p \
+  -c:a aac -b:a 192k -shortest salida.mp4</code></pre></li>
+        <li><strong>Upload</strong> from youtube.com, and tick the synthetic content box.</li>
+      </ol>
+
+      <div class="note">
+        <p>
+          WhisperX runs on the CPU on a Mac, because the library underneath it has no Metal support.
+          For a three minute song that is a couple of minutes of waiting, and its word timings are
+          noticeably better than the faster Apple-native alternatives. For a lyric video, accuracy is
+          worth more than speed.
+        </p>
+        <p>
+          <code>d=25*215</code> is the pan length in frames: 25 frames per second times the song length
+          in seconds. He should change 215 to match the actual song or the pan finishes early and freezes.
+        </p>
+      </div>
+
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>One finished MP4, three to four minutes long, that plays with his voice and lyrics on screen in time.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 8 ============ -->
+  <div class="session">
+    <div class="session-num">8</div>
+    <div class="session-body">
+      <h2>The rules that keep the channel alive</h2>
+      <span class="timebox">10 minutes</span><span class="who">Say this out loud to him</span>
+
+      <p>
+        This is the part to be blunt about, because the tooling is the easy half and this is where
+        channels like his actually die.
+      </p>
+
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>Rule</th><th>What happens if ignored</th><th>What he does</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Disclose synthetic content</strong></td>
+              <td>Demonetisation on its own</td>
+              <td>Tick "altered or synthetic content" on every upload. It costs nothing: no reach penalty, no ad penalty.</td>
+            </tr>
+            <tr>
+              <td><strong>Do not mass-produce</strong></td>
+              <td>Warning, then 90 day suspension, then permanent removal from the Partner Program</td>
+              <td>Real spoken intro plus one hand-edited lyric line, every single day.</td>
+            </tr>
+            <tr>
+              <td><strong>Never sing the translation</strong></td>
+              <td>Copyright claim on the audio</td>
+              <td>Original paraphrase only. Cite the passage in the description instead.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rubric">
+        <span class="rubric-label">Why the two minutes of real work matter</span>
+        <p>
+          A fully automatic daily AI song channel is the exact thing YouTube's inauthentic content
+          policy was written to catch. The intro and the edited line are what make it AI-assisted work
+          with human direction, which is explicitly allowed. Build the habit on day one, because
+          adding it after a strike does not undo the strike.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="double-rule">
+
+  <section>
+    <h2>Teaching order, if you only have one evening</h2>
+    <p class="kicker">These four get him to something he can hear. The rest can wait a week.</p>
+    <div class="split">
+      <div class="card">
+        <h3>Do these together</h3>
+        <ul>
+          <li><strong>Session 0</strong>, five minutes, decides everything else</li>
+          <li><strong>Session 1</strong>, foundations, he cannot do this one alone</li>
+          <li><strong>Session 2</strong>, the Gospel feed, an early guaranteed win</li>
+          <li><strong>Session 3</strong>, Grok, delivers value before anything is installed</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Leave him with</h3>
+        <ul>
+          <li><strong>Session 4</strong>, the recording, entirely his own effort</li>
+          <li>Three mornings of Grok emails to read critically</li>
+          <li>One instruction: <em>do not try to train the voice on the Mac</em></li>
+        </ul>
+        <p style="margin-top:0.9rem">Then meet again for sessions 5 and 6, which are the ones that genuinely need two people.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="double-rule">
+
+  <section>
+    <h2>Everything he needs to download</h2>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Session</th><th>What</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Homebrew</td><td><a href="https://brew.sh">brew.sh</a></td></tr>
+          <tr><td>2</td><td>The Gospel feed it reads</td><td><a href="https://evangeliodeldia.org/SP/gospel">evangeliodeldia.org</a></td></tr>
+          <tr><td>3</td><td>Grok Automations</td><td><a href="https://grok.com">grok.com</a></td></tr>
+          <tr><td>5, 6</td><td>Applio, voice conversion</td><td><a href="https://github.com/IAHispano/Applio">github.com/IAHispano/Applio</a></td></tr>
+          <tr><td>6</td><td>ACE-Step 1.5, music</td><td><a href="https://github.com/ace-step/ACE-Step-1.5">github.com/ace-step/ACE-Step-1.5</a></td></tr>
+          <tr><td>7</td><td>Demucs, stem separation</td><td><a href="https://github.com/adefossez/demucs">github.com/adefossez/demucs</a></td></tr>
+          <tr><td>7</td><td>WhisperX, lyric timing</td><td><a href="https://github.com/m-bain/whisperX">github.com/m-bain/whisperX</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">Applio's documentation is written by a Spanish-speaking team, which makes it easier going for him than the original RVC project.</p>
+  </section>
+
+  <footer>
+    <p>
+      Companion to the pipeline plan. Verified 15 August 2026: the Evangelizo feed is live,
+      <code>start_gradio_ui_macos.sh</code> and Applio's <code>run-install.sh</code> both exist in
+      their repositories as written. Apple Silicon support in these projects moves quickly, so if a
+      command has changed, the repository's own README is the authority.
+    </p>
+  </footer>
+
+</div>
+
+</body>
+</html>
