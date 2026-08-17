@@ -1,4 +1,4 @@
-<title>ACE-Step and Applio</title>
+<title>Making the song</title>
 <style>
   /* ---- tokens: light is the base, both dark states re-declare the same set ---- */
   :root {
@@ -242,89 +242,149 @@
   }
 </style>
 
+<style>
+  /* additions for the walkthrough: numbered micro-steps and bare command blocks */
+  .howto { counter-reset: hstep; list-style: none; padding: 0; margin: 0 0 1.2rem; max-width: 68ch; }
+  .howto > li {
+    position: relative; padding-left: 2.4rem; margin-bottom: 0.8rem; line-height: 1.55;
+  }
+  .howto > li::before {
+    counter-increment: hstep; content: counter(hstep);
+    position: absolute; left: 0; top: 0.12rem;
+    width: 1.6rem; height: 1.6rem; border-radius: 50%;
+    background: var(--rubric); color: var(--paper);
+    font-size: 0.8rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .howto ul { margin: 0.4rem 0 0; padding-left: 1.1rem; }
+  .howto ul li { margin-bottom: 0.25rem; }
+
+  .cmd {
+    background: var(--sunken); border: 1px solid var(--rule);
+    border-left: 3px solid var(--rubric);
+    padding: 0.8rem 1rem; margin: 0.5rem 0 1rem;
+    overflow-x: auto; font-family: var(--mono);
+    font-size: 0.82rem; line-height: 1.65; white-space: pre;
+  }
+  .cmd-label {
+    display: block; font-size: 0.68rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink-faint);
+    font-weight: 650; margin-bottom: 0.3rem; font-family: var(--sans);
+  }
+  .once, .daily {
+    display: inline-block; font-size: 0.66rem; letter-spacing: 0.12em;
+    text-transform: uppercase; font-weight: 700; padding: 0.16rem 0.5rem;
+    border-radius: 2px; margin-left: 0.5rem; vertical-align: 0.18rem;
+  }
+  /* text stays --ink: the gilt is a mid-tone and fails contrast as a foreground on light paper */
+  .once  { background: var(--surface); color: var(--ink); border: 1px solid var(--gilt); }
+  .daily { background: var(--rubric-bg); color: var(--rubric); border: 1px solid var(--rubric); }
+  .big-warn {
+    border: 2px solid var(--rubric); background: var(--rubric-bg);
+    padding: 1.1rem 1.25rem; margin: 1.2rem 0;
+  }
+  .big-warn p:last-child { margin-bottom: 0; }
+  .big-warn strong { color: var(--rubric); }
+</style>
+
 <div class="wrap">
 
   <header class="masthead">
-    <p class="eyebrow">Music and voice &middot; ACE-Step local, Applio in the browser</p>
-    <h1>ACE-Step and Applio</h1>
+    <p class="eyebrow">Complete walkthrough &middot; no experience assumed</p>
+    <h1>Making the song</h1>
     <p class="standfirst">
-      The two apps that turn the morning's lyrics into a finished vocal in his own voice. ACE-Step
-      installs on the Mac. Applio runs in a browser tab and never touches it. Every command, with a
-      checkpoint after each one.
+      Start with the lyrics Grok wrote this morning. Finish with a full song sung in your own voice.
+      Every button, every command, and what you should see after each one.
     </p>
     <div class="meta-strip">
-      <span><b>Needs</b> Apple Silicon, 16 GB or better</span>
-      <span><b>ACE-Step</b> on the Mac, port 7860</span>
-      <span><b>Applio</b> in the browser, Colab notebook</span>
-      <span><b>Verified</b> 17 Aug 2026</span>
+      <span><b>You need</b> a Mac and a Google account</span>
+      <span><b>One-time setup</b> about 3 hours, spread over 2 evenings</span>
+      <span><b>Then daily</b> about 20 minutes</span>
+      <span><b>Cost</b> nothing</span>
     </div>
   </header>
 
   <hr class="double-rule">
 
   <section>
-    <h2>Three things to know before he types anything</h2>
-    <p class="kicker">The first one is good news, and it deletes a whole session from this guide.</p>
-
+    <h2>What you are about to do</h2>
     <p>
-      <strong>Applio never gets installed on the Mac.</strong> Running it in the browser means there is
-      no <code>run-install.sh</code>, no Python 3.10 to install alongside his 3.12, and no version clash
-      to work around. It also means the same Colab session that trained his voice is the one that
-      converts with it, so training and inference stop being two different places. The Mac is left with
-      ACE-Step, Demucs, ffmpeg, and the upload.
+      Two free apps do the work. The first one, <strong>ACE-Step</strong>, reads your lyrics and produces
+      a finished song with singing and instruments. The singer will be a stranger's voice. The second
+      app, <strong>Applio</strong>, takes that singing and replaces the voice with yours.
+    </p>
+    <p>
+      ACE-Step gets installed on your Mac. Applio you use in a web browser, so there is nothing to
+      install for it at all.
     </p>
 
-    <p>
-      <strong>Neither app does the other's job.</strong> ACE-Step writes the song and sings it in a voice
-      that is not his. Applio takes that finished vocal and replaces the timbre with his. There is no
-      "use my voice" setting in one and no "write me a song" setting in the other. The build is the
-      handoff between them.
-    </p>
-
-    <div class="rubric">
-      <span class="rubric-label">The browser link is temporary, and this catches everyone</span>
-      <p>
-        A <code>gradio.live</code> address is a tunnel to a running session, not a website. Gradio quotes
-        one week and frequently gives less, and the moment the Colab session stops the link is dead no
-        matter how old it is. Every working session produces a <em>new</em> address. Bookmarking one is
-        wasted effort: the notebook is the thing to bookmark.
-      </p>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Part</th><th>What happens</th><th>How often</th><th>Time</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1</strong></td><td>You record yourself singing</td><td>Once, ever</td><td>45 min</td></tr>
+          <tr><td><strong>2</strong></td><td>A computer learns your voice</td><td>Once, ever</td><td>20 min, then an hour of waiting</td></tr>
+          <tr><td><strong>3</strong></td><td>You install ACE-Step</td><td>Once, ever</td><td>1 hour, mostly waiting</td></tr>
+          <tr><td><strong>4</strong></td><td>You turn today's lyrics into a song</td><td>Every day</td><td>10 min</td></tr>
+          <tr><td><strong>5</strong></td><td>You put your voice on it</td><td>Every day</td><td>10 min</td></tr>
+        </tbody>
+      </table>
     </div>
-
     <p>
-      One branch before he starts. On an Intel Mac, or 8 GB of memory, ACE-Step locally is not worth
-      attempting: run the music step in Colab too and keep the Mac for the video and the upload.
-      Session 0 of the Mac guide has the full table.
+      Parts 1, 2 and 3 you never have to do again. If you only have one evening, do part 1. Everything
+      else waits, and part 1 is the piece that takes real effort from you rather than from the computer.
     </p>
   </section>
 
   <hr class="double-rule">
 
-  <h2>Part one: ACE-Step, on the Mac</h2>
+  <section>
+    <h2>First, about Terminal</h2>
+    <p class="kicker">Some steps ask you to type a command. If you have never done that, read this once and you are set.</p>
+    <p>
+      Terminal is an app already on your Mac. It is a window where you type instructions instead of
+      clicking them. To open it: hold <strong>Command</strong> and press <strong>Space</strong>, type
+      <strong>Terminal</strong>, and press <strong>Return</strong>.
+    </p>
+    <p>
+      When this page shows a grey box like the one below, copy the whole thing, click into the Terminal
+      window, paste it, and press <strong>Return</strong>. Paste is Command and V, the same as anywhere
+      else on the Mac.
+    </p>
+    <span class="cmd-label">A command box looks like this</span>
+    <div class="cmd">cd ~/gospel-song</div>
+    <div class="note">
+      <p>
+        Terminal shows a lot of text while it works. You do not need to read it. What matters is whether
+        the next step's check passes. Terminal also never asks "are you sure", so paste one box at a time
+        and let each finish before the next.
+      </p>
+    </div>
+  </section>
+
+  <hr class="double-rule">
+
+  <h2>Part 1: Record your voice <span class="once">Once, ever</span></h2>
+  <p class="kicker">This is the only part where your effort decides the result. Everything after is the computer's job.</p>
 
   <!-- ============ 1 ============ -->
   <div class="session">
     <div class="session-num">1</div>
     <div class="session-body">
-      <h2>Install uv</h2>
-      <span class="timebox">2 minutes</span><span class="who">Screen share</span>
-      <p>
-        ACE-Step does not use pip or conda. It uses <code>uv</code>, which reads the project's lockfile
-        and builds the whole environment itself. This is good news: it is one command and it does not ask
-        him to understand virtual environments.
-      </p>
-<pre class="term"><code>$ curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
-      <p>
-        Then quit Terminal completely with Command+Q and reopen it, the same way Homebrew needed in
-        session 1 of the Mac guide. The installer adds <code>uv</code> to the path, and the path only
-        takes effect in a new session.
-      </p>
+      <h2>Open GarageBand and set up a blank recording</h2>
+      <span class="timebox">5 minutes</span><span class="who">You, alone</span>
+      <p>GarageBand is free and already on your Mac. You do not need to know how to use it.</p>
+      <ol class="howto">
+        <li>Hold <strong>Command</strong>, press <strong>Space</strong>, type <strong>GarageBand</strong>, press <strong>Return</strong>.</li>
+        <li>A window asks what kind of project you want. Click <strong>Empty Project</strong>, then click <strong>Choose</strong> at the bottom.</li>
+        <li>Now it asks what kind of track. Click the one with the <strong>microphone</strong> icon, called <strong>Audio</strong>. Then click <strong>Create</strong>.</li>
+        <li>You will see an empty grey workspace with a red circle button near the top middle. That red circle is Record. Do not press it yet.</li>
+      </ol>
       <div class="checkpoint">
-        <span class="checkpoint-label">Checkpoint</span>
-        <p>This prints a version number rather than "command not found":</p>
+        <span class="checkpoint-label">You should see</span>
+        <p>An empty project window with one track on the left and a red record button at the top.</p>
       </div>
-<pre class="term"><code>$ uv --version
-<span class="dim">uv 0.x.x</span></code></pre>
     </div>
   </div>
 
@@ -332,24 +392,35 @@
   <div class="session">
     <div class="session-num">2</div>
     <div class="session-body">
-      <h2>Clone ACE-Step and build its environment</h2>
-      <span class="timebox">10 minutes, mostly downloading</span><span class="who">Screen share</span>
-<pre class="term"><code>$ cd ~
-$ git clone https://github.com/ace-step/ACE-Step-1.5.git
-$ cd ACE-Step-1.5
-$ uv sync</code></pre>
+      <h2>Sing for 10 to 30 minutes</h2>
+      <span class="timebox">30 minutes</span><span class="who">You, alone, in a quiet room</span>
       <p>
-        <code>uv sync</code> is the step that takes a while. It resolves every dependency and downloads
-        them into a local environment inside the folder. Nothing outside <code>~/ACE-Step-1.5</code> is
-        touched, which also means deleting that folder is a clean uninstall.
+        You are not performing. You are giving the computer material to learn from. Nobody hears this
+        recording except the training program.
       </p>
-      <div class="checkpoint">
-        <span class="checkpoint-label">Checkpoint</span>
+
+      <div class="big-warn">
         <p>
-          <code>uv run acestep --help</code> prints usage text instead of a traceback. A traceback here
-          almost always means the wrong Python version, so check <code>python3 --version</code> reads
-          3.11 or 3.12.
+          <strong>Sing, do not talk.</strong> This is the mistake that ruins the whole thing. A recording
+          of you speaking teaches the computer your speaking voice, and then every high note in every
+          song afterwards comes out thin and strained. Sing.
         </p>
+      </div>
+
+      <p><strong>What to sing:</strong> anything you know well. Hymns you have sung for years are perfect,
+      because you are not thinking about the words. Sing some low and slow, and some high and loud. Whatever
+      part of your range you never record, the computer has to guess at later.</p>
+
+      <p><strong>How to do it right:</strong></p>
+      <ol class="howto">
+        <li>Turn off any music playing in the room. If you want a backing track to keep you in tune, use <strong>headphones</strong>. If the microphone hears the backing track, the computer learns the backing track too.</li>
+        <li>Sit the same distance from the microphone the whole time. Your Mac's built-in microphone is fine. A cheap USB microphone is better. Either beats moving around.</li>
+        <li>Press the red <strong>Record</strong> button and sing. Stop when you have done at least ten minutes. Thirty is better.</li>
+        <li>Do it all in one sitting, in one room. Consistency matters more than quality here.</li>
+      </ol>
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>A long blue or green bar across the track, showing what you recorded. Play it back and listen. You should hear only yourself.</p>
       </div>
     </div>
   </div>
@@ -358,30 +429,25 @@ $ uv sync</code></pre>
   <div class="session">
     <div class="session-num">3</div>
     <div class="session-body">
-      <h2>First launch, and the long download</h2>
-      <span class="timebox">5 minutes of typing, then 20 to 40 of waiting</span><span class="who">Him, alone</span>
-      <p>The repository ships a launcher written for macOS. Use it rather than the generic instructions:</p>
-<pre class="term"><code>$ cd ~/ACE-Step-1.5
-$ chmod +x start_gradio_ui_macos.sh
-$ ./start_gradio_ui_macos.sh</code></pre>
-      <p>
-        It detects the environment, checks for updates, installs anything missing, and starts the web
-        interface. The first run also downloads the model weights, which are between 4 and 9 GB depending
-        on which size he chooses. That download happens once.
-      </p>
+      <h2>Save the recording where the Mac can find it</h2>
+      <span class="timebox">5 minutes</span><span class="who">You, alone</span>
+      <ol class="howto">
+        <li>In GarageBand's top menu click <strong>Share</strong>, then <strong>Export Song to Disk</strong>.</li>
+        <li>A box appears. Where it asks for the format, choose <strong>WAV</strong>. Not MP3. MP3 throws away detail the computer needs.</li>
+        <li>Name it <strong>canto</strong> and click <strong>Export</strong>. Save it to your Desktop so it is easy to find.</li>
+        <li>Now open <strong>Finder</strong>. Hold <strong>Command</strong> and <strong>Shift</strong> and press <strong>H</strong>. This opens your Home folder.</li>
+        <li>Find the folder called <strong>gospel-song</strong>. Drag <strong>canto.wav</strong> from your Desktop into it.</li>
+      </ol>
       <div class="note">
         <p>
-          If he would rather skip the environment checks on later days, <code>uv run acestep</code> starts
-          the same interface directly. Both open <code>http://localhost:7860</code> in the browser. This
-          one is a real local address, not a tunnel, so it does not expire.
+          If there is no <strong>gospel-song</strong> folder yet, paste this into Terminal to make one,
+          then drag the file in:
         </p>
       </div>
+      <div class="cmd">mkdir -p ~/gospel-song</div>
       <div class="checkpoint">
-        <span class="checkpoint-label">Checkpoint</span>
-        <p>
-          The page loads at <code>http://localhost:7860</code> and shows a lyrics box and a tags or style
-          box. Leave the Terminal window open: closing it stops the app.
-        </p>
+        <span class="checkpoint-label">You should see</span>
+        <p>A file called <code>canto.wav</code> sitting inside the <strong>gospel-song</strong> folder in Finder.</p>
       </div>
     </div>
   </div>
@@ -390,37 +456,30 @@ $ ./start_gradio_ui_macos.sh</code></pre>
   <div class="session">
     <div class="session-num">4</div>
     <div class="session-body">
-      <h2>Turn the morning's email into a track</h2>
-      <span class="timebox">5 minutes a song</span><span class="who">Him, alone</span>
+      <h2>Cut the recording into small pieces</h2>
+      <span class="timebox">2 minutes</span><span class="who">You, alone</span>
       <p>
-        Two fields, straight from the Grok reply. The <code>===ESTILO===</code> block goes into the tags
-        or style field, and the <code>===LETRA===</code> block goes into the lyrics field.
+        The training program cannot use one long recording. It needs many short ones. This command chops
+        your recording into ten second pieces automatically. You do not have to do it by hand.
+      </p>
+      <span class="cmd-label">Paste this into Terminal</span>
+      <div class="cmd">cd ~/gospel-song
+mkdir -p dataset
+ffmpeg -i canto.wav -f segment -segment_time 10 -ac 1 -ar 44100 -c:a pcm_s16le dataset/voz_%03d.wav</div>
+      <p>
+        Text will scroll past for a few seconds. When it stops and you get a fresh line, it is done.
       </p>
       <p>
-        The <code>[verse]</code> and <code>[chorus]</code> tags stay in English even though the words are
-        Spanish. That is what the model reads to build the song's shape, and it is the most common thing
-        to lose in a copy and paste. If the structure comes out wrong, check those tags first.
-      </p>
-      <p>
-        Set the duration to match <code>DURACIÓN OBJETIVO</code> from the prompt. Three and a half minutes
-        is 210 seconds. On an M2 Max a track that length renders in about a minute and a half.
-      </p>
-      <div class="note">
-        <p>
-          On 16 GB, use the smaller 2B model. The 4B is better and wants the memory to match. He can
-          change this later without reinstalling anything, so start small and hear the difference before
-          deciding.
-        </p>
-      </div>
-      <p>
-        Save the result as <code>cancion.wav</code> in <code>~/gospel-song/</code>. Keep the name simple:
-        no spaces, no accents. Applio rejects awkward filenames later and it is easier never to create one.
+        Now open the new <strong>dataset</strong> folder in Finder and click through a few files. Press
+        <strong>Space</strong> to hear one without opening anything. Delete any that are silence, a cough,
+        or you clearing your throat. You do not need to check all of them, just remove the obvious duds.
       </p>
       <div class="checkpoint">
-        <span class="checkpoint-label">Checkpoint</span>
+        <span class="checkpoint-label">You should see</span>
         <p>
-          <code>cancion.wav</code> plays, a voice is singing his Spanish lyrics, and the length is roughly
-          what he asked for. The voice will not be his yet. That is the next half.
+          A <strong>dataset</strong> folder holding at least 60 files named <code>voz_001.wav</code>,
+          <code>voz_002.wav</code> and so on. Three picked at random are you singing, clearly, with no
+          background noise.
         </p>
       </div>
     </div>
@@ -428,37 +487,32 @@ $ ./start_gradio_ui_macos.sh</code></pre>
 
   <hr class="double-rule">
 
-  <h2>Part two: Applio, in a browser tab</h2>
+  <h2>Part 2: Teach the computer your voice <span class="once">Once, ever</span></h2>
+  <p class="kicker">This happens on Google's computers, not yours, and it is free.</p>
+
+  <div class="rubric">
+    <span class="rubric-label">Do not try to do this part on your Mac</span>
+    <p>
+      Applio can technically train on a Mac and it will look like it is working. It prints progress, it
+      never finishes. People wait six hours and get nothing. Google lends you a much faster machine for
+      free, and it takes about an hour. Use Google's.
+    </p>
+  </div>
 
   <!-- ============ 5 ============ -->
   <div class="session">
     <div class="session-num">5</div>
     <div class="session-body">
-      <h2>Open the notebook and start the session</h2>
-      <span class="timebox">5 minutes, then a few of waiting</span><span class="who">Him, alone, every session</span>
-      <p>
-        Applio publishes two Colab notebooks. The one that produces the interface in the browser is the
-        <strong>UI version</strong>:
-      </p>
-<pre class="term"><code>https://colab.research.google.com/github/iahispano/applio/blob/main/assets/Applio.ipynb</code></pre>
-      <p>
-        Bookmark that address, not the link it generates. Before running anything, set
-        <strong>Runtime, Change runtime type, T4 GPU</strong>, the same as the training session. Then run
-        the cells in order. The last one prints a <code>gradio.live</code> address. Open it.
-      </p>
-      <div class="note">
-        <p>
-          The second notebook, <em>Applio_NoUI</em>, is the one their documentation recommends generally,
-          because it is steadier for long training runs. It has no interface, so for this build the UI
-          version is the right pick. Use NoUI only if a training run keeps dying.
-        </p>
-      </div>
+      <h2>Put your recordings on Google Drive</h2>
+      <span class="timebox">10 minutes</span><span class="who">You, alone</span>
+      <ol class="howto">
+        <li>In Finder, right-click the <strong>dataset</strong> folder and choose <strong>Compress "dataset"</strong>. This makes a single file called <strong>dataset.zip</strong>.</li>
+        <li>Go to <strong>drive.google.com</strong> in your browser and sign in.</li>
+        <li>Drag <strong>dataset.zip</strong> from Finder onto the Google Drive page. Wait for it to finish uploading.</li>
+      </ol>
       <div class="checkpoint">
-        <span class="checkpoint-label">Checkpoint</span>
-        <p>
-          The Applio page loads in a browser tab, with the row of tabs across the top reading Inference,
-          Training, TTS, Voice Blender, Realtime, Plugins, Download, and the rest.
-        </p>
+        <span class="checkpoint-label">You should see</span>
+        <p><code>dataset.zip</code> listed in your Google Drive.</p>
       </div>
     </div>
   </div>
@@ -467,39 +521,29 @@ $ ./start_gradio_ui_macos.sh</code></pre>
   <div class="session">
     <div class="session-num">6</div>
     <div class="session-body">
-      <h2>Put his voice into the session</h2>
-      <span class="timebox">2 minutes, every session</span><span class="who">Him, alone</span>
+      <h2>Start the training</h2>
+      <span class="timebox">20 minutes of clicking, then an hour of waiting</span><span class="who">You, alone</span>
+      <p>Open this address in your browser. Save it as a bookmark, because you will use it every day later.</p>
+      <div class="cmd">https://colab.research.google.com/github/iahispano/applio/blob/main/assets/Applio.ipynb</div>
       <p>
-        A fresh session starts with no voices in it. His trained model has to go in each time, and the
-        quickest route is the <strong>Download</strong> tab, which has a <strong>Drop files</strong>
-        section built for exactly this.
+        What opens is a page full of grey blocks with small round <strong>play buttons</strong> on the
+        left of each one. You click them from top to bottom, one at a time, and wait for each to finish
+        before clicking the next. A green tick appears when a block is done.
       </p>
-      <p>
-        Drop the <code>.pth</code> there, then drop the <code>.index</code>. Applio reads the model name
-        out of each filename, makes a folder for it, and files them together. It tidies the usual index
-        prefixes on the way, so <code>added_</code> and <code>nprobe_1_</code> on the front of the index
-        name do not stop the pair from grouping under one voice.
-      </p>
+      <ol class="howto">
+        <li><strong>Before clicking anything</strong>, go to the <strong>Runtime</strong> menu at the top, choose <strong>Change runtime type</strong>, select <strong>T4 GPU</strong>, and click <strong>Save</strong>. Doing this after you start means starting over.</li>
+        <li>Click the play button on the first block. Wait for the green tick. Move to the next. Keep going until every block has run.</li>
+        <li>The last block prints a web address ending in <strong>gradio.live</strong>. Click it. Applio opens in a new tab.</li>
+        <li>In Applio, click the <strong>Training</strong> tab along the top.</li>
+        <li>Give your voice a name you will recognise in a year. Your own name is fine. Do not call it "test".</li>
+        <li>Point it at your <strong>dataset.zip</strong>, set sample rate to <strong>40k</strong>, epochs to <strong>300</strong>, and save every <strong>50</strong>.</li>
+        <li>Start it, then leave the tab open and check back in an hour.</li>
+      </ol>
       <div class="note">
         <p>
-          The same tab has a <strong>Model Link</strong> field that fetches a model from a URL. If he
-          parks the two files somewhere with a direct link, that becomes a paste instead of two uploads.
-          Worth doing once he is tired of dragging them.
-        </p>
-      </div>
-      <div class="rubric">
-        <span class="rubric-label">Only .pth and .index are accepted</span>
-        <p>
-          Dropping a zip, a folder, or anything else is refused outright with an error about an invalid
-          model file. If Colab exported his training run as an archive, unzip it first and drop the two
-          files inside.
-        </p>
-      </div>
-      <div class="checkpoint">
-        <span class="checkpoint-label">Checkpoint</span>
-        <p>
-          Back on the <strong>Inference</strong> tab, press <strong>Refresh</strong>. His model name now
-          appears in the Voice Model dropdown, and the matching file appears under Index File.
+          Google takes the free machine back if you ignore the tab for too long, so look at it every
+          fifteen minutes or so. Saving every 50 epochs means an interruption costs you a few minutes,
+          not the whole hour.
         </p>
       </div>
     </div>
@@ -509,66 +553,24 @@ $ ./start_gradio_ui_macos.sh</code></pre>
   <div class="session">
     <div class="session-num">7</div>
     <div class="session-body">
-      <h2>The Inference tab, field by field</h2>
-      <span class="timebox">3 minutes a song</span><span class="who">Him, alone</span>
-      <p>Top to bottom, in the order the page is laid out:</p>
+      <h2>Download your voice and keep it safe</h2>
+      <span class="timebox">5 minutes</span><span class="who">You, alone</span>
       <p>
-        <strong>Voice Model.</strong> His model, from session 6. <strong>Index File.</strong> Its matching
-        index. If either dropdown is empty, press <strong>Refresh</strong> before assuming something
-        broke.
+        When training finishes you get <strong>two files</strong>. One ends in <strong>.pth</strong> and
+        one ends in <strong>.index</strong>. Those two files are your voice. They are the whole point of
+        the last two hours.
       </p>
-      <p>
-        <strong>Single</strong> or <strong>Batch.</strong> Single is right for one song a day. Batch takes
-        a folder path and is worth knowing about only if he ever falls a week behind.
-      </p>
-      <p>
-        <strong>Upload Audio.</strong> Drag the vocal stem onto the drop area, or click it and browse.
-        This is where the file leaves the Mac. <strong>Select Audio</strong> underneath then picks which
-        uploaded file to convert.
-      </p>
-      <p>
-        <strong>I agree to the terms of use.</strong> A checkbox, and it gates the Convert button. It is
-        the single most common reason a first attempt appears to do nothing at all.
-      </p>
-      <p>
-        <strong>Convert.</strong> Progress appears under <strong>Output Information</strong>, and
-        <strong>Export Audio</strong> saves the result back down to the Mac.
-      </p>
-
-      <h3 style="margin-top:1.6rem">The four Advanced Settings worth touching</h3>
-      <div class="tbl-scroll">
-        <table>
-          <thead><tr><th>Setting</th><th>What it does</th><th>Where to start</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><strong>Pitch</strong></td>
-              <td>Shifts the output in semitones. Negative goes lower, positive goes higher.</td>
-              <td>0. Use 12 or -12 only if the song lands an octave off.</td>
-            </tr>
-            <tr>
-              <td><strong>Index Rate</strong></td>
-              <td>How closely the output chases his recorded timbre rather than the input vocal.</td>
-              <td>0.3 to 0.8. Push it up for more of him, down when it turns metallic.</td>
-            </tr>
-            <tr>
-              <td><strong>Protect Voiceless Consonants</strong></td>
-              <td>Preserves consonants and breath instead of smearing them into the vowel.</td>
-              <td>0.3 to 0.7. Raise it if the words get mushy.</td>
-            </tr>
-            <tr>
-              <td><strong>Volume Envelope</strong></td>
-              <td>Blends the output's loudness with the original's, so it does not over-compress.</td>
-              <td>Leave it until a song comes back flat and lifeless.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <ol class="howto">
+        <li>Download both to your Mac.</li>
+        <li>In Finder, make a folder called <strong>voz</strong> inside <strong>gospel-song</strong>, and put both files there.</li>
+        <li>Copy them somewhere else as well, a Google Drive folder or a USB stick. If you lose them you have to sing for thirty minutes again.</li>
+      </ol>
       <div class="checkpoint">
-        <span class="checkpoint-label">Checkpoint</span>
+        <span class="checkpoint-label">You should see</span>
         <p>
-          The converted file plays back in his voice, singing the same notes as the input. If it is his
-          timbre but the wrong tune, that is Pitch. If it is the right tune but metallic, that is Index
-          Rate.
+          Two files in <strong>gospel-song/voz</strong>. Click the <code>.pth</code> file once and look at
+          its size: it should be somewhere between 50 MB and 200 MB. If it is only a few kilobytes, the
+          training did not really finish and you need to run it again.
         </p>
       </div>
     </div>
@@ -576,52 +578,32 @@ $ ./start_gradio_ui_macos.sh</code></pre>
 
   <hr class="double-rule">
 
-  <h2>Part three: the chain, every morning</h2>
+  <h2>Part 3: Install ACE-Step <span class="once">Once, ever</span></h2>
+  <p class="kicker">Four boxes to paste. Most of the time is the Mac downloading in the background.</p>
 
   <!-- ============ 8 ============ -->
   <div class="session">
     <div class="session-num">8</div>
     <div class="session-body">
-      <h2>Five steps from lyrics to a finished vocal</h2>
-      <span class="timebox">about 15 minutes a song</span><span class="who">Him, alone</span>
+      <h2>Install the helper, then restart Terminal</h2>
+      <span class="timebox">5 minutes</span><span class="who">You, alone</span>
       <p>
-        The browser hop adds an upload and a download that the all-local version did not have. Everything
-        else is the same, and the two apps still run side by side: ACE-Step in one tab on
-        <code>localhost:7860</code>, Applio in another on its <code>gradio.live</code> address.
+        ACE-Step needs a small helper program called <strong>uv</strong>, which fetches everything else
+        for it. One box:
       </p>
+      <span class="cmd-label">Paste this into Terminal</span>
+      <div class="cmd">curl -LsSf https://astral.sh/uv/install.sh | sh</div>
 
-      <p><strong>One.</strong> ACE-Step writes the track. Save it as <code>cancion.wav</code>.</p>
-
-      <p><strong>Two.</strong> Demucs pulls the vocal away from everything else, on the Mac:</p>
-<pre class="term"><code>$ cd ~/gospel-song
-$ demucs --two-stems=vocals cancion.wav
-<span class="dim"># -> separated/htdemucs/cancion/{vocals.wav, no_vocals.wav}</span></code></pre>
-
-      <p>
-        <strong>Three.</strong> Upload <code>vocals.wav</code> to the Applio tab, tick the terms box, and
-        press Convert.
-      </p>
-
-      <p>
-        <strong>Four.</strong> Export Audio, and put the download into <code>~/gospel-song/</code> as
-        <code>vocals_clonada.wav</code>. Browsers land files in <code>~/Downloads</code> by default, so
-        this is a move, not a wish.
-      </p>
-
-      <p><strong>Five.</strong> ffmpeg puts his vocal back over the untouched instrumental:</p>
-<pre class="term"><code>$ ffmpeg -i separated/htdemucs/cancion/no_vocals.wav -i vocals_clonada.wav \
-    -filter_complex "[1:a]volume=1.15[v];[0:a][v]amix=inputs=2:duration=longest" \
-    -c:a pcm_s16le final.wav</code></pre>
-      <p>
-        The <code>volume=1.15</code> lifts the vocal slightly above the backing. It is the one number
-        worth adjusting by ear on the first few songs, and once it sounds right it stays right.
-      </p>
-      <div class="checkpoint">
-        <span class="checkpoint-label">Checkpoint</span>
+      <div class="big-warn">
         <p>
-          <code>final.wav</code> is the whole song, the voice is recognisably his, and the instrumental
-          is undamaged. This is the file the video step in the pipeline plan expects.
+          <strong>Now quit Terminal completely and open it again.</strong> Press Command and Q, not just
+          the red dot on the window. Terminal only notices new programs when it starts up, so if you skip
+          this the next step fails and looks like the install broke when it did not.
         </p>
+      </div>
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>In the new Terminal window, paste <code>uv --version</code>. It prints a number. If it says "command not found", you did not really quit Terminal.</p>
       </div>
     </div>
   </div>
@@ -630,119 +612,342 @@ $ demucs --two-stems=vocals cancion.wav
   <div class="session">
     <div class="session-num">9</div>
     <div class="session-body">
-      <h2>What the browser hop costs him later</h2>
-      <span class="timebox">Not yet</span><span class="who">Reference only</span>
+      <h2>Download ACE-Step</h2>
+      <span class="timebox">10 to 15 minutes, mostly waiting</span><span class="who">You, alone</span>
+      <span class="cmd-label">Paste this into Terminal</span>
+      <div class="cmd">cd ~
+git clone https://github.com/ace-step/ACE-Step-1.5.git
+cd ACE-Step-1.5
+uv sync</div>
       <p>
-        <code>run_dia.py</code>, from prompt 2 on the Prompts page, drives programs rather than clicking
-        buttons. ACE-Step is ready for that already: <code>uv run acestep-api</code> starts a REST server
-        on <code>http://localhost:8001</code>, which is what the script will call.
+        The last line is the slow one. A great deal of text scrolls past. Leave it alone until you get a
+        fresh empty line back.
       </p>
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>Paste <code>uv run acestep --help</code>. It prints a page of help text rather than a red error.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 10 ============ -->
+  <div class="session">
+    <div class="session-num">10</div>
+    <div class="session-body">
+      <h2>Start it for the first time</h2>
+      <span class="timebox">5 minutes, then up to 40 of downloading</span><span class="who">You, alone</span>
+      <span class="cmd-label">Paste this into Terminal</span>
+      <div class="cmd">cd ~/ACE-Step-1.5
+chmod +x start_gradio_ui_macos.sh
+./start_gradio_ui_macos.sh</div>
       <p>
-        Applio in a browser tab is the one part that cannot be automated as it stands, because the whole
-        point of the share link is that it moves. When the day comes to script this properly, the voice
-        step is the piece that has to come back onto the Mac. That is a fair trade for getting started now
-        without an install, and it costs nothing until then, since the script is weeks away regardless.
+        The very first time, it downloads the model that actually writes the music. That is between 4 and
+        9 GB, so it takes a while. It only happens once. Every day after this, the same command starts it
+        in under a minute.
       </p>
+      <p>When it has finished, open your browser and go to:</p>
+      <div class="cmd">http://localhost:7860</div>
+      <div class="big-warn">
+        <p>
+          <strong>Leave the Terminal window open while you use ACE-Step.</strong> That window is the app
+          running. Closing it switches the app off and the browser page stops working.
+        </p>
+      </div>
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>A page with a large box for lyrics and another box for style or tags.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="double-rule">
+
+  <h2>Part 4: Turn today's lyrics into a song <span class="daily">Every day</span></h2>
+
+  <!-- ============ 11 ============ -->
+  <div class="session">
+    <div class="session-num">11</div>
+    <div class="session-body">
+      <h2>Yes, you copy and paste straight from Grok</h2>
+      <span class="timebox">3 minutes</span><span class="who">You, alone</span>
+      <p>
+        Grok's reply is one block of text with headings in it. You need <strong>two pieces</strong> out of
+        it. A reply looks like this:
+      </p>
+      <div class="cmd">===TITULO===
+Vengan tambien a mi vina
+
+===ESTILO===
+latin worship ballad, acoustic guitar, male vocal, warm pads, 72 bpm
+
+===LETRA===
+[verse]
+Salio de madrugada a buscar
+...
+[chorus]
+...</div>
+
+      <div class="big-warn">
+        <p>
+          <strong>Do not copy the lines with equals signs.</strong> Those are only labels telling you
+          where each piece starts. Copy the text <em>underneath</em> them.
+        </p>
+        <p>
+          <strong>Do keep the words in square brackets.</strong> <code>[verse]</code> and
+          <code>[chorus]</code> get pasted along with the lyrics. They are instructions to the music
+          program telling it where the verses and the chorus go. Delete those and the song comes out
+          shapeless.
+        </p>
+      </div>
+
+      <p>So, concretely:</p>
+      <ol class="howto">
+        <li>Copy the single line underneath <code>===ESTILO===</code>. That is the <strong>style</strong>.</li>
+        <li>Copy everything underneath <code>===LETRA===</code>, starting at <code>[verse]</code> and stopping when you reach the next line with equals signs. That is the <strong>lyrics</strong>.</li>
+      </ol>
+      <div class="note">
+        <p>
+          The style line is in English on purpose, even though the song is in Spanish. The music program
+          only understands these descriptions in English. The lyrics stay in Spanish.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 12 ============ -->
+  <div class="session">
+    <div class="session-num">12</div>
+    <div class="session-body">
+      <h2>Make the song</h2>
+      <span class="timebox">5 minutes</span><span class="who">You, alone</span>
+      <p>Start ACE-Step if it is not already running, then go to <code>http://localhost:7860</code>.</p>
+      <span class="cmd-label">Paste this into Terminal to start it</span>
+      <div class="cmd">cd ~/ACE-Step-1.5
+./start_gradio_ui_macos.sh</div>
+      <ol class="howto">
+        <li>Paste the <strong>style</strong> into the tags or style box.</li>
+        <li>Paste the <strong>lyrics</strong> into the lyrics box.</li>
+        <li>Find the length setting and set it to <strong>210</strong> seconds, which is three and a half minutes.</li>
+        <li>Click <strong>Generate</strong> and wait. On most Macs this is one to three minutes.</li>
+        <li>When the song appears, click the small download arrow on the player to save it.</li>
+        <li>In Finder, move the downloaded file into <strong>gospel-song</strong> and rename it <strong>cancion.wav</strong>.</li>
+      </ol>
+      <div class="note">
+        <p>
+          Keep the name simple. No spaces, no accents, no apostrophes. Later steps refuse awkward
+          filenames and the error message does not tell you that is the problem.
+        </p>
+      </div>
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>
+          <code>cancion.wav</code> in your <strong>gospel-song</strong> folder. Play it. It is a real song
+          with your words, sung by a stranger. Fixing that is part 5.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="double-rule">
+
+  <h2>Part 5: Put your voice on it <span class="daily">Every day</span></h2>
+
+  <!-- ============ 13 ============ -->
+  <div class="session">
+    <div class="session-num">13</div>
+    <div class="session-body">
+      <h2>Separate the singing from the instruments</h2>
+      <span class="timebox">2 minutes</span><span class="who">You, alone</span>
+      <p>
+        You cannot swap the voice while the instruments are mixed in with it. This command pulls them
+        apart into two separate files.
+      </p>
+      <span class="cmd-label">Paste this into Terminal</span>
+      <div class="cmd">cd ~/gospel-song
+demucs --two-stems=vocals cancion.wav</div>
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>
+          A new folder path <code>separated/htdemucs/cancion/</code> containing
+          <code>vocals.wav</code>, which is just the singing, and <code>no_vocals.wav</code>, which is
+          just the music.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 14 ============ -->
+  <div class="session">
+    <div class="session-num">14</div>
+    <div class="session-body">
+      <h2>Open Applio and load your voice</h2>
+      <span class="timebox">5 minutes</span><span class="who">You, alone, every day</span>
+      <p>
+        This is the same bookmark from part 2. Applio does not stay open overnight, so you start it fresh
+        each day.
+      </p>
+      <ol class="howto">
+        <li>Open the bookmarked Colab page.</li>
+        <li><strong>Runtime</strong>, <strong>Change runtime type</strong>, <strong>T4 GPU</strong>, <strong>Save</strong>.</li>
+        <li>Click the play buttons top to bottom, waiting for each green tick.</li>
+        <li>Click the <strong>gradio.live</strong> link the last block prints.</li>
+        <li>In Applio, click the <strong>Download</strong> tab, find the <strong>Drop files</strong> area, and drag in your <strong>.pth</strong> file, then your <strong>.index</strong> file.</li>
+        <li>Click the <strong>Inference</strong> tab, then click <strong>Refresh</strong>. Your voice now appears in the Voice Model list.</li>
+      </ol>
+      <div class="note">
+        <p>
+          The <code>gradio.live</code> address is different every single day, so do not bookmark it. The
+          Colab page is the bookmark. Dropping your two voice files in again each day is normal and takes
+          about thirty seconds.
+        </p>
+      </div>
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>Your voice name in the <strong>Voice Model</strong> dropdown, and its matching file in <strong>Index File</strong>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 15 ============ -->
+  <div class="session">
+    <div class="session-num">15</div>
+    <div class="session-body">
+      <h2>Convert the singing to your voice</h2>
+      <span class="timebox">5 minutes</span><span class="who">You, alone</span>
+      <ol class="howto">
+        <li>Choose your voice in <strong>Voice Model</strong> and its match in <strong>Index File</strong>.</li>
+        <li>Under <strong>Upload Audio</strong>, drag in <code>vocals.wav</code> from the folder step 13 made. Or click the box and browse to it.</li>
+        <li>Tick the box that says <strong>I agree to the terms of use</strong>.</li>
+        <li>Click <strong>Convert</strong> and wait a few seconds.</li>
+        <li>Click <strong>Export Audio</strong> to download the result.</li>
+        <li>In Finder, move it from <strong>Downloads</strong> into <strong>gospel-song</strong> and rename it <strong>vocals_clonada.wav</strong>.</li>
+      </ol>
+
+      <div class="big-warn">
+        <p>
+          <strong>If Convert seems to do nothing, it is the terms box.</strong> Applio will not convert
+          until that checkbox is ticked, and it gives you no message explaining why. This catches almost
+          everybody on their first try.
+        </p>
+      </div>
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>Play the downloaded file. It is the same tune, same words, but now it is you singing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 16 ============ -->
+  <div class="session">
+    <div class="session-num">16</div>
+    <div class="session-body">
+      <h2>Put the song back together</h2>
+      <span class="timebox">1 minute</span><span class="who">You, alone</span>
+      <p>Your voice and the instruments are two separate files. One command joins them.</p>
+      <span class="cmd-label">Paste this into Terminal</span>
+      <div class="cmd">cd ~/gospel-song
+ffmpeg -i separated/htdemucs/cancion/no_vocals.wav -i vocals_clonada.wav -filter_complex "[1:a]volume=1.15[v];[0:a][v]amix=inputs=2:duration=longest" -c:a pcm_s16le final.wav</div>
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>
+          <code>final.wav</code> in your <strong>gospel-song</strong> folder. That is the finished song,
+          in your voice, ready for the video.
+        </p>
+      </div>
+      <div class="note">
+        <p>
+          If your voice is too quiet against the music, change <code>1.15</code> to <code>1.3</code> and
+          run it again. Too loud, try <code>1.0</code>. Once it sounds right, it stays right for every
+          song after.
+        </p>
+      </div>
     </div>
   </div>
 
   <hr class="double-rule">
 
   <section>
-    <h2>When something goes wrong</h2>
-    <p class="kicker">The first three are specific to running Applio in a browser and account for most first-week frustration.</p>
-
-    <div class="tbl-scroll">
-      <table>
-        <thead>
-          <tr><th>What he sees</th><th>Where it comes from</th><th>What to do</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Convert does nothing at all</td>
-            <td>Applio</td>
-            <td>The terms of use box is not ticked. It gates the button and gives no warning.</td>
-          </tr>
-          <tr>
-            <td>The page will not load any more</td>
-            <td>Gradio</td>
-            <td>The share link expired or the session stopped. Reopen the notebook, run the cells, take the new address, and reload his model.</td>
-          </tr>
-          <tr>
-            <td>His voice is missing from the dropdown</td>
-            <td>Applio</td>
-            <td>Press Refresh first. If still absent, the files never landed: redo the Download tab drop.</td>
-          </tr>
-          <tr>
-            <td>An error mentioning the audio file</td>
-            <td>Applio</td>
-            <td>Spaces or accents in the filename. Rename to something plain before uploading.</td>
-          </tr>
-          <tr>
-            <td>Vocal sounds metallic or robotic</td>
-            <td>Applio</td>
-            <td>Lower the index rate. If it persists across every song, the dataset was speech rather than singing and needs rerecording.</td>
-          </tr>
-          <tr>
-            <td>Vocal is in the wrong octave</td>
-            <td>Applio</td>
-            <td>The pitch setting, in semitones. Twelve up or twelve down is one octave.</td>
-          </tr>
-          <tr>
-            <td>Song has no chorus, or repeats oddly</td>
-            <td>ACE-Step</td>
-            <td>The <code>[verse]</code> and <code>[chorus]</code> tags did not survive the paste. Check the lyrics box, not the model.</td>
-          </tr>
-          <tr>
-            <td>Backing instruments bleed into the converted vocal</td>
-            <td>Demucs</td>
-            <td>Separation was imperfect before Applio ever saw it. Try UVR with a different model for that song.</td>
-          </tr>
-          <tr>
-            <td>Track is much shorter or longer than asked</td>
-            <td>ACE-Step</td>
-            <td>The duration control, not the lyrics. Set it in seconds and regenerate.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <h2>Your day, once everything is set up</h2>
+    <p class="kicker">This is all that is left after the one-time parts are done.</p>
+    <ol class="howto">
+      <li>Open the Grok email. Copy the style line and the lyrics.</li>
+      <li>Start ACE-Step in Terminal, open <code>localhost:7860</code>, paste both, set 210 seconds, Generate, download as <code>cancion.wav</code>.</li>
+      <li>Run the <code>demucs</code> command.</li>
+      <li>Start the Applio Colab page, drop in your two voice files, upload <code>vocals.wav</code>, tick the terms box, Convert, Export, rename to <code>vocals_clonada.wav</code>.</li>
+      <li>Run the <code>ffmpeg</code> command. You now have <code>final.wav</code>.</li>
+      <li>Rewrite one line of the chorus in your own words before you publish. This one matters and takes two minutes.</li>
+    </ol>
   </section>
 
   <hr class="double-rule">
 
   <section>
-    <h2>Everything on one screen</h2>
+    <h2>When something goes wrong</h2>
+    <p class="kicker">Find your symptom in the left column. Almost everything is one of these.</p>
+
     <div class="tbl-scroll">
       <table>
         <thead>
-          <tr><th>&nbsp;</th><th>ACE-Step 1.5</th><th>Applio</th></tr>
+          <tr><th>What you see</th><th>What it means</th><th>What to do</th></tr>
         </thead>
         <tbody>
-          <tr><td><strong>Job</strong></td><td>Writes and sings the song</td><td>Makes the singing his</td></tr>
-          <tr><td><strong>Runs</strong></td><td>On the Mac</td><td>In a browser tab, hosted in Colab</td></tr>
-          <tr><td><strong>Installs with</strong></td><td><code>uv sync</code></td><td class="yes">Nothing to install</td></tr>
-          <tr><td><strong>Starts with</strong></td><td><code>./start_gradio_ui_macos.sh</code></td><td>Running the notebook cells</td></tr>
-          <tr><td><strong>Address</strong></td><td><code>localhost:7860</code>, permanent</td><td class="no">A new <code>gradio.live</code> link each session</td></tr>
-          <tr><td><strong>Files move by</strong></td><td>Path on disk</td><td class="no">Upload and download</td></tr>
-          <tr><td><strong>Setup each session</strong></td><td>None</td><td class="no">Re-drop the .pth and .index</td></tr>
-          <tr><td><strong>Licence</strong></td><td class="yes">Apache 2.0, commercial use fine</td><td class="yes">MIT, commercial use fine</td></tr>
+          <tr>
+            <td>Convert does nothing in Applio</td>
+            <td>The terms box is not ticked</td>
+            <td>Tick <strong>I agree to the terms of use</strong>. There is no error message for this.</td>
+          </tr>
+          <tr>
+            <td>The Applio page will not load</td>
+            <td>Yesterday's link is dead</td>
+            <td>Open the Colab bookmark, run the blocks again, use the new link. Links last a day or two at most.</td>
+          </tr>
+          <tr>
+            <td>Your voice is missing from the list</td>
+            <td>The files did not load, or the list is stale</td>
+            <td>Click <strong>Refresh</strong> first. If still missing, drop the two files into the Download tab again.</td>
+          </tr>
+          <tr>
+            <td>"command not found" in Terminal</td>
+            <td>Terminal has not restarted since the install</td>
+            <td>Press Command and Q to quit Terminal fully, then open it again.</td>
+          </tr>
+          <tr>
+            <td>An error mentioning your audio file</td>
+            <td>The filename has spaces or accents</td>
+            <td>Rename it to plain letters with no spaces, then try again.</td>
+          </tr>
+          <tr>
+            <td>The song has no chorus or repeats oddly</td>
+            <td>The bracket tags were lost</td>
+            <td>Check <code>[verse]</code> and <code>[chorus]</code> are still in the lyrics box.</td>
+          </tr>
+          <tr>
+            <td>Your voice sounds tinny or robotic</td>
+            <td>Usually the index rate</td>
+            <td>In Applio's Advanced Settings lower the <strong>index rate</strong>. If every song does it, your recording was speech rather than singing.</td>
+          </tr>
+          <tr>
+            <td>Your voice is an octave too high or low</td>
+            <td>The pitch setting</td>
+            <td>In Advanced Settings set <strong>pitch</strong> to 12 or -12.</td>
+          </tr>
+          <tr>
+            <td>The browser page stopped responding</td>
+            <td>You closed the Terminal window</td>
+            <td>That window was the app. Start it again with the command from step 12.</td>
+          </tr>
         </tbody>
       </table>
     </div>
-    <p>
-      Both licences are the reason this pair is the ending point rather than a stepping stone. A channel
-      built on them can monetise without a subscription and without a rights problem in the catalogue.
-    </p>
   </section>
 
   <p class="cap">
-    Companion to the pipeline plan and the Mac build guide. Verified 17 August 2026: ACE-Step 1.5
-    documents <code>uv sync</code> and <code>start_gradio_ui_macos.sh</code> with the Gradio UI on 7860
-    and the API on 8001; Applio publishes the UI and NoUI Colab notebooks, its Download tab accepts
-    dropped <code>.pth</code> and <code>.index</code> files and files them under a folder named from the
-    filename, and Gradio documents a one week ceiling on share links that is best effort rather than
-    guaranteed. Both projects move quickly, so if something has changed, each repository's own
-    documentation is the authority.
+    Companion to the pipeline plan and the Mac build guide, which cover the same ground with more
+    background. Verified 17 August 2026 against both projects: ACE-Step 1.5 documents
+    <code>uv sync</code> and <code>start_gradio_ui_macos.sh</code>, with its interface on port 7860;
+    Applio publishes the Colab notebook linked above, and its Download tab accepts dropped
+    <code>.pth</code> and <code>.index</code> files. Both projects change quickly, so if a button has
+    moved, their own documentation is the authority.
   </p>
 
 </div>
