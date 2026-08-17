@@ -245,16 +245,17 @@
 <div class="wrap">
 
   <header class="masthead">
-    <p class="eyebrow">Music and voice &middot; the local half of the build</p>
+    <p class="eyebrow">Music and voice &middot; ACE-Step local, Applio in the browser</p>
     <h1>ACE-Step and Applio</h1>
     <p class="standfirst">
-      The two apps that turn the morning's lyrics into a finished vocal in his own voice. This is
-      sessions 6 and 7 of the Mac guide opened out into every command, with a checkpoint after each one.
+      The two apps that turn the morning's lyrics into a finished vocal in his own voice. ACE-Step
+      installs on the Mac. Applio runs in a browser tab and never touches it. Every command, with a
+      checkpoint after each one.
     </p>
     <div class="meta-strip">
       <span><b>Needs</b> Apple Silicon, 16 GB or better</span>
-      <span><b>ACE-Step</b> Python 3.11 or 3.12, port 7860</span>
-      <span><b>Applio</b> Python 3.10, port 6969</span>
+      <span><b>ACE-Step</b> on the Mac, port 7860</span>
+      <span><b>Applio</b> in the browser, Colab notebook</span>
       <span><b>Verified</b> 17 Aug 2026</span>
     </div>
   </header>
@@ -263,42 +264,43 @@
 
   <section>
     <h2>Three things to know before he types anything</h2>
-    <p class="kicker">Each one is a night lost if he finds it out the hard way.</p>
+    <p class="kicker">The first one is good news, and it deletes a whole session from this guide.</p>
 
     <p>
-      <strong>They want different versions of Python.</strong> ACE-Step needs 3.11 or 3.12. Applio needs
-      3.10. This sounds like a conflict and is not: each installer builds its own virtual environment and
-      keeps to it, so both versions can sit on the same Mac without arguing. He just has to install both
-      and let each app do its own setup. The way this goes wrong is trying to run one inside the other's
-      environment, which produces dependency errors that look like a corrupted download.
+      <strong>Applio never gets installed on the Mac.</strong> Running it in the browser means there is
+      no <code>run-install.sh</code>, no Python 3.10 to install alongside his 3.12, and no version clash
+      to work around. It also means the same Colab session that trained his voice is the one that
+      converts with it, so training and inference stop being two different places. The Mac is left with
+      ACE-Step, Demucs, ffmpeg, and the upload.
     </p>
 
     <p>
       <strong>Neither app does the other's job.</strong> ACE-Step writes the song and sings it in a voice
       that is not his. Applio takes that finished vocal and replaces the timbre with his. There is no
-      setting in ACE-Step for "use my voice" and no setting in Applio for "write me a song." The whole
-      build is the handoff between them.
+      "use my voice" setting in one and no "write me a song" setting in the other. The build is the
+      handoff between them.
     </p>
 
     <div class="rubric">
-      <span class="rubric-label">Applio here is for converting, not for training</span>
+      <span class="rubric-label">The browser link is temporary, and this catches everyone</span>
       <p>
-        The <code>.pth</code> and <code>.index</code> he loads in session 8 come from the free Colab GPU
-        in session 5 of the Mac guide. Applio on Apple Silicon converts a vocal in seconds and trains a
-        model almost not at all. Installing it does not change that.
+        A <code>gradio.live</code> address is a tunnel to a running session, not a website. Gradio quotes
+        one week and frequently gives less, and the moment the Colab session stops the link is dead no
+        matter how old it is. Every working session produces a <em>new</em> address. Bookmarking one is
+        wasted effort: the notebook is the thing to bookmark.
       </p>
     </div>
 
     <p>
       One branch before he starts. On an Intel Mac, or 8 GB of memory, ACE-Step locally is not worth
-      attempting: run the music step in Colab and keep the Mac for Applio, the video, and the upload.
+      attempting: run the music step in Colab too and keep the Mac for the video and the upload.
       Session 0 of the Mac guide has the full table.
     </p>
   </section>
 
   <hr class="double-rule">
 
-  <h2>Part one: ACE-Step, the music</h2>
+  <h2>Part one: ACE-Step, on the Mac</h2>
 
   <!-- ============ 1 ============ -->
   <div class="session">
@@ -314,8 +316,8 @@
 <pre class="term"><code>$ curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
       <p>
         Then quit Terminal completely with Command+Q and reopen it, the same way Homebrew needed in
-        session 1. The installer adds <code>uv</code> to the path, and the path only takes effect in a
-        new session.
+        session 1 of the Mac guide. The installer adds <code>uv</code> to the path, and the path only
+        takes effect in a new session.
       </p>
       <div class="checkpoint">
         <span class="checkpoint-label">Checkpoint</span>
@@ -370,7 +372,8 @@ $ ./start_gradio_ui_macos.sh</code></pre>
       <div class="note">
         <p>
           If he would rather skip the environment checks on later days, <code>uv run acestep</code> starts
-          the same interface directly. Both open <code>http://localhost:7860</code> in the browser.
+          the same interface directly. Both open <code>http://localhost:7860</code> in the browser. This
+          one is a real local address, not a tunnel, so it does not expire.
         </p>
       </div>
       <div class="checkpoint">
@@ -409,7 +412,10 @@ $ ./start_gradio_ui_macos.sh</code></pre>
           deciding.
         </p>
       </div>
-      <p>Save the result as <code>cancion.wav</code> in <code>~/gospel-song/</code>.</p>
+      <p>
+        Save the result as <code>cancion.wav</code> in <code>~/gospel-song/</code>. Keep the name simple:
+        no spaces, no accents. Applio rejects awkward filenames later and it is easier never to create one.
+      </p>
       <div class="checkpoint">
         <span class="checkpoint-label">Checkpoint</span>
         <p>
@@ -422,28 +428,38 @@ $ ./start_gradio_ui_macos.sh</code></pre>
 
   <hr class="double-rule">
 
-  <h2>Part two: Applio, the voice</h2>
+  <h2>Part two: Applio, in a browser tab</h2>
 
   <!-- ============ 5 ============ -->
   <div class="session">
     <div class="session-num">5</div>
     <div class="session-body">
-      <h2>Install Python 3.10 alongside the one he has</h2>
-      <span class="timebox">5 minutes</span><span class="who">Screen share</span>
+      <h2>Open the notebook and start the session</h2>
+      <span class="timebox">5 minutes, then a few of waiting</span><span class="who">Him, alone, every session</span>
       <p>
-        Session 1 of the Mac guide installed Python 3.12, which is what everything else in this build
-        uses. Applio wants 3.10. Homebrew keeps versions side by side, so this adds one without
-        disturbing the other.
+        Applio publishes two Colab notebooks. The one that produces the interface in the browser is the
+        <strong>UI version</strong>:
       </p>
-<pre class="term"><code>$ brew install python@3.10</code></pre>
+<pre class="term"><code>https://colab.research.google.com/github/iahispano/applio/blob/main/assets/Applio.ipynb</code></pre>
+      <p>
+        Bookmark that address, not the link it generates. Before running anything, set
+        <strong>Runtime, Change runtime type, T4 GPU</strong>, the same as the training session. Then run
+        the cells in order. The last one prints a <code>gradio.live</code> address. Open it.
+      </p>
+      <div class="note">
+        <p>
+          The second notebook, <em>Applio_NoUI</em>, is the one their documentation recommends generally,
+          because it is steadier for long training runs. It has no interface, so for this build the UI
+          version is the right pick. Use NoUI only if a training run keeps dying.
+        </p>
+      </div>
       <div class="checkpoint">
         <span class="checkpoint-label">Checkpoint</span>
-        <p>Both of these answer, with different numbers:</p>
+        <p>
+          The Applio page loads in a browser tab, with the row of tabs across the top reading Inference,
+          Training, TTS, Voice Blender, Realtime, Plugins, Download, and the rest.
+        </p>
       </div>
-<pre class="term"><code>$ python3.10 --version
-<span class="dim">Python 3.10.x</span>
-$ python3 --version
-<span class="dim">Python 3.12.x</span></code></pre>
     </div>
   </div>
 
@@ -451,29 +467,39 @@ $ python3 --version
   <div class="session">
     <div class="session-num">6</div>
     <div class="session-body">
-      <h2>Clone Applio and run its installer</h2>
-      <span class="timebox">10 minutes, plus a long download</span><span class="who">Screen share</span>
-<pre class="term"><code>$ cd ~
-$ git clone https://github.com/IAHispano/Applio.git
-$ cd Applio
-$ chmod +x run-install.sh run-applio.sh
-$ ./run-install.sh</code></pre>
+      <h2>Put his voice into the session</h2>
+      <span class="timebox">2 minutes, every session</span><span class="who">Him, alone</span>
       <p>
-        The installer builds its own virtual environment inside <code>~/Applio</code> and pulls the RVC
-        dependencies into it. This is the largest download in the build after the ACE-Step weights.
+        A fresh session starts with no voices in it. His trained model has to go in each time, and the
+        quickest route is the <strong>Download</strong> tab, which has a <strong>Drop files</strong>
+        section built for exactly this.
+      </p>
+      <p>
+        Drop the <code>.pth</code> there, then drop the <code>.index</code>. Applio reads the model name
+        out of each filename, makes a folder for it, and files them together. It tidies the usual index
+        prefixes on the way, so <code>added_</code> and <code>nprobe_1_</code> on the front of the index
+        name do not stop the pair from grouping under one voice.
       </p>
       <div class="note">
         <p>
-          Applio's documentation is written by a Spanish-speaking team, so when something needs looking up
-          he can read it in his own language. That is a real advantage over the original RVC project.
+          The same tab has a <strong>Model Link</strong> field that fetches a model from a URL. If he
+          parks the two files somewhere with a direct link, that becomes a paste instead of two uploads.
+          Worth doing once he is tired of dragging them.
+        </p>
+      </div>
+      <div class="rubric">
+        <span class="rubric-label">Only .pth and .index are accepted</span>
+        <p>
+          Dropping a zip, a folder, or anything else is refused outright with an error about an invalid
+          model file. If Colab exported his training run as an archive, unzip it first and drop the two
+          files inside.
         </p>
       </div>
       <div class="checkpoint">
         <span class="checkpoint-label">Checkpoint</span>
         <p>
-          <code>run-install.sh</code> ends without an error, and <code>ls -a ~/Applio</code> shows a
-          <code>.venv</code> folder. If it stopped partway, run it again: it picks up rather than starting
-          over.
+          Back on the <strong>Inference</strong> tab, press <strong>Refresh</strong>. His model name now
+          appears in the Voice Model dropdown, and the matching file appears under Index File.
         </p>
       </div>
     </div>
@@ -483,24 +509,66 @@ $ ./run-install.sh</code></pre>
   <div class="session">
     <div class="session-num">7</div>
     <div class="session-body">
-      <h2>Launch it and load his voice</h2>
-      <span class="timebox">10 minutes</span><span class="who">Screen share</span>
-<pre class="term"><code>$ cd ~/Applio &amp;&amp; ./run-applio.sh</code></pre>
+      <h2>The Inference tab, field by field</h2>
+      <span class="timebox">3 minutes a song</span><span class="who">Him, alone</span>
+      <p>Top to bottom, in the order the page is laid out:</p>
       <p>
-        A browser tab opens at <code>http://localhost:6969</code>. Note that this is a different port from
-        ACE-Step, which matters in a moment.
+        <strong>Voice Model.</strong> His model, from session 6. <strong>Index File.</strong> Its matching
+        index. If either dropdown is empty, press <strong>Refresh</strong> before assuming something
+        broke.
       </p>
       <p>
-        Go to the <strong>Inference</strong> tab. Put the <code>.pth</code> and <code>.index</code> pair
-        from the Colab training run into <code>~/Applio/logs/</code> in a folder named after the model,
-        then use the refresh control so the dropdown picks them up. Select the model, then select its
-        index file underneath.
+        <strong>Single</strong> or <strong>Batch.</strong> Single is right for one song a day. Batch takes
+        a folder path and is worth knowing about only if he ever falls a week behind.
       </p>
+      <p>
+        <strong>Upload Audio.</strong> Drag the vocal stem onto the drop area, or click it and browse.
+        This is where the file leaves the Mac. <strong>Select Audio</strong> underneath then picks which
+        uploaded file to convert.
+      </p>
+      <p>
+        <strong>I agree to the terms of use.</strong> A checkbox, and it gates the Convert button. It is
+        the single most common reason a first attempt appears to do nothing at all.
+      </p>
+      <p>
+        <strong>Convert.</strong> Progress appears under <strong>Output Information</strong>, and
+        <strong>Export Audio</strong> saves the result back down to the Mac.
+      </p>
+
+      <h3 style="margin-top:1.6rem">The four Advanced Settings worth touching</h3>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>Setting</th><th>What it does</th><th>Where to start</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Pitch</strong></td>
+              <td>Shifts the output in semitones. Negative goes lower, positive goes higher.</td>
+              <td>0. Use 12 or -12 only if the song lands an octave off.</td>
+            </tr>
+            <tr>
+              <td><strong>Index Rate</strong></td>
+              <td>How closely the output chases his recorded timbre rather than the input vocal.</td>
+              <td>0.3 to 0.8. Push it up for more of him, down when it turns metallic.</td>
+            </tr>
+            <tr>
+              <td><strong>Protect Voiceless Consonants</strong></td>
+              <td>Preserves consonants and breath instead of smearing them into the vowel.</td>
+              <td>0.3 to 0.7. Raise it if the words get mushy.</td>
+            </tr>
+            <tr>
+              <td><strong>Volume Envelope</strong></td>
+              <td>Blends the output's loudness with the original's, so it does not over-compress.</td>
+              <td>Leave it until a song comes back flat and lifeless.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div class="checkpoint">
         <span class="checkpoint-label">Checkpoint</span>
         <p>
-          His model name appears in the voice dropdown on the Inference tab, and selecting it does not
-          throw an error in the Terminal window.
+          The converted file plays back in his voice, singing the same notes as the input. If it is his
+          timbre but the wrong tune, that is Pitch. If it is the right tune but metallic, that is Index
+          Rate.
         </p>
       </div>
     </div>
@@ -514,27 +582,33 @@ $ ./run-install.sh</code></pre>
   <div class="session">
     <div class="session-num">8</div>
     <div class="session-body">
-      <h2>Four steps from lyrics to a finished vocal</h2>
-      <span class="timebox">about 10 minutes a song</span><span class="who">Him, alone</span>
+      <h2>Five steps from lyrics to a finished vocal</h2>
+      <span class="timebox">about 15 minutes a song</span><span class="who">Him, alone</span>
       <p>
-        Both apps can run at the same time, ACE-Step on 7860 and Applio on 6969, in two Terminal windows.
-        That is how a normal morning goes: generate in one tab, convert in the other.
+        The browser hop adds an upload and a download that the all-local version did not have. Everything
+        else is the same, and the two apps still run side by side: ACE-Step in one tab on
+        <code>localhost:7860</code>, Applio in another on its <code>gradio.live</code> address.
       </p>
 
       <p><strong>One.</strong> ACE-Step writes the track. Save it as <code>cancion.wav</code>.</p>
 
-      <p><strong>Two.</strong> Demucs pulls the vocal away from everything else:</p>
+      <p><strong>Two.</strong> Demucs pulls the vocal away from everything else, on the Mac:</p>
 <pre class="term"><code>$ cd ~/gospel-song
 $ demucs --two-stems=vocals cancion.wav
 <span class="dim"># -> separated/htdemucs/cancion/{vocals.wav, no_vocals.wav}</span></code></pre>
 
       <p>
-        <strong>Three.</strong> In Applio's Inference tab, feed it
-        <code>separated/htdemucs/cancion/vocals.wav</code> and save the output as
-        <code>vocals_clonada.wav</code>. This is the step that takes seconds, not minutes.
+        <strong>Three.</strong> Upload <code>vocals.wav</code> to the Applio tab, tick the terms box, and
+        press Convert.
       </p>
 
-      <p><strong>Four.</strong> ffmpeg puts his vocal back over the untouched instrumental:</p>
+      <p>
+        <strong>Four.</strong> Export Audio, and put the download into <code>~/gospel-song/</code> as
+        <code>vocals_clonada.wav</code>. Browsers land files in <code>~/Downloads</code> by default, so
+        this is a move, not a wish.
+      </p>
+
+      <p><strong>Five.</strong> ffmpeg puts his vocal back over the untouched instrumental:</p>
 <pre class="term"><code>$ ffmpeg -i separated/htdemucs/cancion/no_vocals.wav -i vocals_clonada.wav \
     -filter_complex "[1:a]volume=1.15[v];[0:a][v]amix=inputs=2:duration=longest" \
     -c:a pcm_s16le final.wav</code></pre>
@@ -556,18 +630,18 @@ $ demucs --two-stems=vocals cancion.wav
   <div class="session">
     <div class="session-num">9</div>
     <div class="session-body">
-      <h2>The API, for when the script exists</h2>
+      <h2>What the browser hop costs him later</h2>
       <span class="timebox">Not yet</span><span class="who">Reference only</span>
       <p>
-        <code>run_dia.py</code>, from prompt 2 on the Prompts page, cannot click buttons in a web
-        interface. ACE-Step ships a REST server for exactly that reason:
+        <code>run_dia.py</code>, from prompt 2 on the Prompts page, drives programs rather than clicking
+        buttons. ACE-Step is ready for that already: <code>uv run acestep-api</code> starts a REST server
+        on <code>http://localhost:8001</code>, which is what the script will call.
       </p>
-<pre class="term"><code>$ uv run acestep-api
-<span class="dim"># http://localhost:8001</span></code></pre>
       <p>
-        He does not need this until he has made a couple of weeks of videos by hand and is ready to
-        automate. It is here so that when the coding AI asks what it should call, the answer is already
-        written down.
+        Applio in a browser tab is the one part that cannot be automated as it stands, because the whole
+        point of the share link is that it moves. When the day comes to script this properly, the voice
+        step is the piece that has to come back onto the Mac. That is a fair trade for getting started now
+        without an install, and it costs nothing until then, since the script is weeks away regardless.
       </p>
     </div>
   </div>
@@ -575,15 +649,35 @@ $ demucs --two-stems=vocals cancion.wav
   <hr class="double-rule">
 
   <section>
-    <h2>When something sounds wrong</h2>
-    <p class="kicker">Almost every bad result traces back to one of these five, and they are quick to tell apart.</p>
+    <h2>When something goes wrong</h2>
+    <p class="kicker">The first three are specific to running Applio in a browser and account for most first-week frustration.</p>
 
     <div class="tbl-scroll">
       <table>
         <thead>
-          <tr><th>What he hears</th><th>Where it comes from</th><th>What to change</th></tr>
+          <tr><th>What he sees</th><th>Where it comes from</th><th>What to do</th></tr>
         </thead>
         <tbody>
+          <tr>
+            <td>Convert does nothing at all</td>
+            <td>Applio</td>
+            <td>The terms of use box is not ticked. It gates the button and gives no warning.</td>
+          </tr>
+          <tr>
+            <td>The page will not load any more</td>
+            <td>Gradio</td>
+            <td>The share link expired or the session stopped. Reopen the notebook, run the cells, take the new address, and reload his model.</td>
+          </tr>
+          <tr>
+            <td>His voice is missing from the dropdown</td>
+            <td>Applio</td>
+            <td>Press Refresh first. If still absent, the files never landed: redo the Download tab drop.</td>
+          </tr>
+          <tr>
+            <td>An error mentioning the audio file</td>
+            <td>Applio</td>
+            <td>Spaces or accents in the filename. Rename to something plain before uploading.</td>
+          </tr>
           <tr>
             <td>Vocal sounds metallic or robotic</td>
             <td>Applio</td>
@@ -592,7 +686,7 @@ $ demucs --two-stems=vocals cancion.wav
           <tr>
             <td>Vocal is in the wrong octave</td>
             <td>Applio</td>
-            <td>The transpose setting, in semitones. Twelve up or twelve down is one octave.</td>
+            <td>The pitch setting, in semitones. Twelve up or twelve down is one octave.</td>
           </tr>
           <tr>
             <td>Song has no chorus, or repeats oddly</td>
@@ -625,12 +719,13 @@ $ demucs --two-stems=vocals cancion.wav
         </thead>
         <tbody>
           <tr><td><strong>Job</strong></td><td>Writes and sings the song</td><td>Makes the singing his</td></tr>
-          <tr><td><strong>Python</strong></td><td>3.11 or 3.12</td><td>3.10</td></tr>
-          <tr><td><strong>Installs with</strong></td><td><code>uv sync</code></td><td><code>./run-install.sh</code></td></tr>
-          <tr><td><strong>Starts with</strong></td><td><code>./start_gradio_ui_macos.sh</code></td><td><code>./run-applio.sh</code></td></tr>
-          <tr><td><strong>Port</strong></td><td>7860</td><td>6969</td></tr>
+          <tr><td><strong>Runs</strong></td><td>On the Mac</td><td>In a browser tab, hosted in Colab</td></tr>
+          <tr><td><strong>Installs with</strong></td><td><code>uv sync</code></td><td class="yes">Nothing to install</td></tr>
+          <tr><td><strong>Starts with</strong></td><td><code>./start_gradio_ui_macos.sh</code></td><td>Running the notebook cells</td></tr>
+          <tr><td><strong>Address</strong></td><td><code>localhost:7860</code>, permanent</td><td class="no">A new <code>gradio.live</code> link each session</td></tr>
+          <tr><td><strong>Files move by</strong></td><td>Path on disk</td><td class="no">Upload and download</td></tr>
+          <tr><td><strong>Setup each session</strong></td><td>None</td><td class="no">Re-drop the .pth and .index</td></tr>
           <tr><td><strong>Licence</strong></td><td class="yes">Apache 2.0, commercial use fine</td><td class="yes">MIT, commercial use fine</td></tr>
-          <tr><td><strong>Trains on the Mac</strong></td><td>Nothing to train</td><td class="no">No, use Colab</td></tr>
         </tbody>
       </table>
     </div>
@@ -641,12 +736,13 @@ $ demucs --two-stems=vocals cancion.wav
   </section>
 
   <p class="cap">
-    Companion to the pipeline plan and the Mac build guide. Verified 17 August 2026 against both
-    repositories: ACE-Step 1.5 documents <code>uv sync</code> and
-    <code>start_gradio_ui_macos.sh</code> with the Gradio UI on 7860 and the API on 8001, and Applio
-    documents <code>run-install.sh</code> and <code>run-applio.sh</code> with the UI on 6969 and Python
-    3.10. Apple Silicon support in both projects moves quickly, so if a command has changed, each
-    repository's own README is the authority.
+    Companion to the pipeline plan and the Mac build guide. Verified 17 August 2026: ACE-Step 1.5
+    documents <code>uv sync</code> and <code>start_gradio_ui_macos.sh</code> with the Gradio UI on 7860
+    and the API on 8001; Applio publishes the UI and NoUI Colab notebooks, its Download tab accepts
+    dropped <code>.pth</code> and <code>.index</code> files and files them under a folder named from the
+    filename, and Gradio documents a one week ceiling on share links that is best effort rather than
+    guaranteed. Both projects move quickly, so if something has changed, each repository's own
+    documentation is the authority.
   </p>
 
 </div>

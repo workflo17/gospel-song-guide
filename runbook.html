@@ -465,10 +465,14 @@ gospel-2026-08-21.json -&gt; letras/2026-08-21-prompt.txt (3785 chars)</span></p
 <pre><span class="c">$</span> demucs --two-stems=vocals cancion.wav
 <span class="c"># -&gt; separated/htdemucs/cancion/{vocals.wav, no_vocals.wav}</span></pre>
       <p>
-        Open Applio, load the <code>.pth</code> and <code>.index</code> from step 6 under Inference, feed
-        it <code>vocals.wav</code>, and save the result as <code>vocals_clonada.wav</code>. Then put it
-        back over the instrumental:
+        Applio runs in a browser tab rather than on the Mac, so this part is an upload and a download.
+        Open the Colab notebook, take the <code>gradio.live</code> address it prints, and drop the
+        <code>.pth</code> and <code>.index</code> from step 6 into the Download tab. Then on Inference:
+        upload <code>vocals.wav</code>, tick <b>I agree to the terms of use</b>, press Convert, and
+        Export Audio. Move the download out of <code>~/Downloads</code> and call it
+        <code>vocals_clonada.wav</code>.
       </p>
+      <p>Then put it back over the instrumental:</p>
 <pre><span class="c">$</span> ffmpeg -i separated/htdemucs/cancion/no_vocals.wav -i vocals_clonada.wav \
     -filter_complex "[1:a]volume=1.15[v];[0:a][v]amix=inputs=2:duration=longest" \
     -c:a pcm_s16le final.wav</pre>
