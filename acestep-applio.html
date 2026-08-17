@@ -1,0 +1,652 @@
+<title>ACE-Step and Applio</title>
+<style>
+  /* ---- tokens: light is the base, both dark states re-declare the same set ---- */
+  :root {
+    --paper:      #F6F3F1;
+    --surface:    #EFEAE6;
+    --sunken:     #E7E0DA;
+    --ink:        #1B1614;
+    --ink-soft:   #5C534E;
+    --ink-faint:  #736860;
+    --rubric:     #A81F16;
+    --rubric-bg:  #F6E7E4;
+    --gilt:       #8A6B2C;
+    --rule:       #D6CCC4;
+    --rule-hard:  #B8AAA0;
+    --ok:         #3F6B45;
+    --ok-bg:      #E6EDE6;
+    --warn:       #9A6210;
+    --term-bg:    #221B18;
+    --term-ink:   #D9CFC7;
+    --term-dim:   #988B82;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:      #17110F;
+      --surface:    #201917;
+      --sunken:     #120D0C;
+      --ink:        #EDE5DF;
+      --ink-soft:   #B3A79F;
+      --ink-faint:  #928279;
+      --rubric:     #E8756A;
+      --rubric-bg:  #2E1A18;
+      --gilt:       #C9A961;
+      --rule:       #352925;
+      --rule-hard:  #4A3B35;
+      --ok:         #7FB388;
+      --ok-bg:      #1A241B;
+      --warn:       #D9A24E;
+      --term-bg:    #0D0908;
+      --term-ink:   #D9CFC7;
+      --term-dim:   #8C7F76;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:      #17110F;
+    --surface:    #201917;
+    --sunken:     #120D0C;
+    --ink:        #EDE5DF;
+    --ink-soft:   #B3A79F;
+    --ink-faint:  #928279;
+    --rubric:     #E8756A;
+    --rubric-bg:  #2E1A18;
+    --gilt:       #C9A961;
+    --rule:       #352925;
+    --rule-hard:  #4A3B35;
+    --ok:         #7FB388;
+    --ok-bg:      #1A241B;
+    --warn:       #D9A24E;
+    --term-bg:    #0D0908;
+    --term-ink:   #D9CFC7;
+    --term-dim:   #8C7F76;
+  }
+
+  :root {
+    --serif: "Palatino Linotype", "Iowan Old Style", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Cascadia Mono", "JetBrains Mono", Consolas, "SF Mono", Menlo, monospace;
+    --measure: 68ch;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 16.5px; line-height: 1.62;
+    margin: 0; padding: 0 1.5rem 6rem; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 62rem; margin: 0 auto; }
+
+  /* ---------------- masthead ---------------- */
+  .masthead { padding: 4.5rem 0 0; }
+  .eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.19em; text-transform: uppercase;
+    color: var(--rubric); font-weight: 600; margin: 0 0 1.4rem;
+  }
+  h1 {
+    font-family: var(--serif); font-size: clamp(2.1rem, 5vw, 3.2rem);
+    line-height: 1.08; font-weight: 400; margin: 0 0 1rem;
+    letter-spacing: -0.015em; text-wrap: balance; max-width: 20ch;
+  }
+  h1 em { font-style: italic; color: var(--rubric); }
+  .standfirst {
+    font-family: var(--serif); font-size: 1.2rem; line-height: 1.55;
+    color: var(--ink-soft); max-width: 54ch; margin: 0 0 2rem;
+  }
+
+  .double-rule { border: 0; margin: 3.5rem 0; height: 4px; position: relative; }
+  .double-rule::before, .double-rule::after {
+    content: ""; position: absolute; left: 0; right: 0; background: var(--rule-hard);
+  }
+  .double-rule::before { top: 0; height: 2px; }
+  .double-rule::after  { top: 3px; height: 1px; }
+
+  .meta-strip {
+    display: flex; flex-wrap: wrap; gap: 0 2.2rem;
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 0.9rem 0; font-size: 0.8rem; color: var(--ink-faint);
+  }
+  .meta-strip b { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------------- type ---------------- */
+  h2 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(1.5rem, 3vw, 1.95rem); line-height: 1.18;
+    margin: 0 0 0.4rem; letter-spacing: -0.01em; text-wrap: balance;
+  }
+  h3 {
+    font-family: var(--sans); font-size: 1.02rem; font-weight: 650;
+    margin: 2rem 0 0.5rem; letter-spacing: -0.005em;
+  }
+  h4 {
+    font-family: var(--sans); font-size: 0.73rem; font-weight: 700;
+    letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-faint);
+    margin: 1.7rem 0 0.55rem;
+  }
+  p, li { max-width: var(--measure); }
+  p { margin: 0 0 1.05rem; }
+  ul, ol { margin: 0 0 1.15rem; padding-left: 1.25rem; }
+  li { margin-bottom: 0.42rem; }
+  a { color: var(--rubric); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--rubric); outline-offset: 3px; border-radius: 2px;
+  }
+  strong { font-weight: 650; }
+  code {
+    font-family: var(--mono); font-size: 0.86em; background: var(--sunken);
+    padding: 0.1em 0.34em; border-radius: 3px; border: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: var(--serif); font-style: italic; font-size: 1.05rem;
+    color: var(--gilt); margin: 0 0 1.6rem; max-width: 56ch;
+  }
+
+  /* ---------------- sessions (order is real: each gates the next) ------- */
+  .session { display: grid; grid-template-columns: 4.2rem 1fr; gap: 0 1.4rem; margin: 0 0 3.4rem; }
+  .session-num {
+    font-family: var(--serif); font-size: 2.4rem; line-height: 1; color: var(--gilt);
+    font-variant-numeric: tabular-nums; padding-top: 0.15rem;
+  }
+  .session-body { min-width: 0; }
+  .timebox {
+    display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--ink-faint); border: 1px solid var(--rule-hard);
+    padding: 0.16rem 0.5rem; border-radius: 2px; margin-bottom: 0.7rem;
+  }
+  .who {
+    display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.11em;
+    text-transform: uppercase; padding: 0.16rem 0.5rem; border-radius: 2px;
+    margin: 0 0 0.7rem 0.4rem; color: var(--rubric); background: var(--rubric-bg);
+  }
+  @media (max-width: 640px) {
+    .session { grid-template-columns: 1fr; gap: 0; }
+    .session-num { font-size: 1.8rem; margin-bottom: 0.3rem; }
+  }
+
+  /* ---------------- rubric ---------------- */
+  .rubric {
+    border-left: 3px solid var(--rubric); background: var(--rubric-bg);
+    padding: 0.95rem 1.15rem; margin: 1.3rem 0; max-width: var(--measure);
+  }
+  .rubric-label {
+    display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--rubric); margin-bottom: 0.4rem;
+  }
+  .rubric p { margin: 0; font-size: 0.94rem; }
+  .rubric p + p { margin-top: 0.6rem; }
+
+  .note {
+    border-left: 2px solid var(--rule-hard); padding: 0.15rem 0 0.15rem 1.05rem;
+    margin: 1.3rem 0; color: var(--ink-soft); font-size: 0.94rem; max-width: var(--measure);
+  }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 0.55rem; }
+
+  /* ---------------- checkpoint: the "did it work" gate ---------------- */
+  .checkpoint {
+    border: 1px solid var(--ok); background: var(--ok-bg);
+    padding: 0.9rem 1.15rem; margin: 1.4rem 0; max-width: var(--measure);
+    border-radius: 3px;
+  }
+  .checkpoint-label {
+    display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--ok); margin-bottom: 0.4rem;
+  }
+  .checkpoint p { margin: 0; font-size: 0.94rem; }
+  .checkpoint code { background: transparent; border-color: var(--ok); }
+
+  /* ---------------- code + terminal ---------------- */
+  pre {
+    font-family: var(--mono); font-size: 0.795rem; line-height: 1.62;
+    background: var(--sunken); border: 1px solid var(--rule);
+    padding: 1rem 1.15rem; overflow-x: auto; margin: 0 0 1.2rem;
+    border-radius: 3px; color: var(--ink);
+  }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+  pre.term {
+    background: var(--term-bg); color: var(--term-ink); border-color: var(--term-bg);
+  }
+  pre.term .dim { color: var(--term-dim); }
+  .cap { font-size: 0.76rem; color: var(--ink-faint); margin: -0.75rem 0 1.4rem; max-width: var(--measure); }
+
+  /* ---------------- tables ---------------- */
+  .tbl-scroll { overflow-x: auto; margin: 0 0 0.6rem; border-bottom: 1px solid var(--rule); }
+  table { border-collapse: collapse; width: 100%; min-width: 38rem; font-size: 0.855rem; }
+  th {
+    text-align: left; font-size: 0.68rem; letter-spacing: 0.11em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700; padding: 0 0.85rem 0.55rem 0;
+    border-bottom: 1.5px solid var(--rule-hard); white-space: nowrap;
+  }
+  td { padding: 0.62rem 0.85rem 0.62rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child, th:first-child { padding-left: 0; }
+  .yes { color: var(--ok); font-weight: 650; }
+  .no  { color: var(--rubric); font-weight: 650; }
+  .pick td { background: var(--rubric-bg); }
+  .pick td:first-child { box-shadow: inset 3px 0 0 var(--rubric); padding-left: 0.7rem; }
+
+  /* ---------------- misc ---------------- */
+  .split { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.6rem; margin: 1.5rem 0 2rem; }
+  .card { background: var(--surface); border: 1px solid var(--rule); padding: 1.2rem 1.3rem; border-radius: 3px; }
+  .card h3 { margin-top: 0; }
+  .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+  .card ul { padding-left: 1.1rem; }
+
+  details { border-top: 1px solid var(--rule); padding: 0.85rem 0; max-width: var(--measure); }
+  summary { cursor: pointer; font-weight: 600; font-size: 0.94rem; }
+  details[open] summary { margin-bottom: 0.8rem; color: var(--rubric); }
+
+  footer {
+    margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
+    font-size: 0.8rem; color: var(--ink-faint); max-width: var(--measure);
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Music and voice &middot; the local half of the build</p>
+    <h1>ACE-Step and Applio</h1>
+    <p class="standfirst">
+      The two apps that turn the morning's lyrics into a finished vocal in his own voice. This is
+      sessions 6 and 7 of the Mac guide opened out into every command, with a checkpoint after each one.
+    </p>
+    <div class="meta-strip">
+      <span><b>Needs</b> Apple Silicon, 16 GB or better</span>
+      <span><b>ACE-Step</b> Python 3.11 or 3.12, port 7860</span>
+      <span><b>Applio</b> Python 3.10, port 6969</span>
+      <span><b>Verified</b> 17 Aug 2026</span>
+    </div>
+  </header>
+
+  <hr class="double-rule">
+
+  <section>
+    <h2>Three things to know before he types anything</h2>
+    <p class="kicker">Each one is a night lost if he finds it out the hard way.</p>
+
+    <p>
+      <strong>They want different versions of Python.</strong> ACE-Step needs 3.11 or 3.12. Applio needs
+      3.10. This sounds like a conflict and is not: each installer builds its own virtual environment and
+      keeps to it, so both versions can sit on the same Mac without arguing. He just has to install both
+      and let each app do its own setup. The way this goes wrong is trying to run one inside the other's
+      environment, which produces dependency errors that look like a corrupted download.
+    </p>
+
+    <p>
+      <strong>Neither app does the other's job.</strong> ACE-Step writes the song and sings it in a voice
+      that is not his. Applio takes that finished vocal and replaces the timbre with his. There is no
+      setting in ACE-Step for "use my voice" and no setting in Applio for "write me a song." The whole
+      build is the handoff between them.
+    </p>
+
+    <div class="rubric">
+      <span class="rubric-label">Applio here is for converting, not for training</span>
+      <p>
+        The <code>.pth</code> and <code>.index</code> he loads in session 8 come from the free Colab GPU
+        in session 5 of the Mac guide. Applio on Apple Silicon converts a vocal in seconds and trains a
+        model almost not at all. Installing it does not change that.
+      </p>
+    </div>
+
+    <p>
+      One branch before he starts. On an Intel Mac, or 8 GB of memory, ACE-Step locally is not worth
+      attempting: run the music step in Colab and keep the Mac for Applio, the video, and the upload.
+      Session 0 of the Mac guide has the full table.
+    </p>
+  </section>
+
+  <hr class="double-rule">
+
+  <h2>Part one: ACE-Step, the music</h2>
+
+  <!-- ============ 1 ============ -->
+  <div class="session">
+    <div class="session-num">1</div>
+    <div class="session-body">
+      <h2>Install uv</h2>
+      <span class="timebox">2 minutes</span><span class="who">Screen share</span>
+      <p>
+        ACE-Step does not use pip or conda. It uses <code>uv</code>, which reads the project's lockfile
+        and builds the whole environment itself. This is good news: it is one command and it does not ask
+        him to understand virtual environments.
+      </p>
+<pre class="term"><code>$ curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+      <p>
+        Then quit Terminal completely with Command+Q and reopen it, the same way Homebrew needed in
+        session 1. The installer adds <code>uv</code> to the path, and the path only takes effect in a
+        new session.
+      </p>
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>This prints a version number rather than "command not found":</p>
+      </div>
+<pre class="term"><code>$ uv --version
+<span class="dim">uv 0.x.x</span></code></pre>
+    </div>
+  </div>
+
+  <!-- ============ 2 ============ -->
+  <div class="session">
+    <div class="session-num">2</div>
+    <div class="session-body">
+      <h2>Clone ACE-Step and build its environment</h2>
+      <span class="timebox">10 minutes, mostly downloading</span><span class="who">Screen share</span>
+<pre class="term"><code>$ cd ~
+$ git clone https://github.com/ace-step/ACE-Step-1.5.git
+$ cd ACE-Step-1.5
+$ uv sync</code></pre>
+      <p>
+        <code>uv sync</code> is the step that takes a while. It resolves every dependency and downloads
+        them into a local environment inside the folder. Nothing outside <code>~/ACE-Step-1.5</code> is
+        touched, which also means deleting that folder is a clean uninstall.
+      </p>
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>
+          <code>uv run acestep --help</code> prints usage text instead of a traceback. A traceback here
+          almost always means the wrong Python version, so check <code>python3 --version</code> reads
+          3.11 or 3.12.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 3 ============ -->
+  <div class="session">
+    <div class="session-num">3</div>
+    <div class="session-body">
+      <h2>First launch, and the long download</h2>
+      <span class="timebox">5 minutes of typing, then 20 to 40 of waiting</span><span class="who">Him, alone</span>
+      <p>The repository ships a launcher written for macOS. Use it rather than the generic instructions:</p>
+<pre class="term"><code>$ cd ~/ACE-Step-1.5
+$ chmod +x start_gradio_ui_macos.sh
+$ ./start_gradio_ui_macos.sh</code></pre>
+      <p>
+        It detects the environment, checks for updates, installs anything missing, and starts the web
+        interface. The first run also downloads the model weights, which are between 4 and 9 GB depending
+        on which size he chooses. That download happens once.
+      </p>
+      <div class="note">
+        <p>
+          If he would rather skip the environment checks on later days, <code>uv run acestep</code> starts
+          the same interface directly. Both open <code>http://localhost:7860</code> in the browser.
+        </p>
+      </div>
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>
+          The page loads at <code>http://localhost:7860</code> and shows a lyrics box and a tags or style
+          box. Leave the Terminal window open: closing it stops the app.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 4 ============ -->
+  <div class="session">
+    <div class="session-num">4</div>
+    <div class="session-body">
+      <h2>Turn the morning's email into a track</h2>
+      <span class="timebox">5 minutes a song</span><span class="who">Him, alone</span>
+      <p>
+        Two fields, straight from the Grok reply. The <code>===ESTILO===</code> block goes into the tags
+        or style field, and the <code>===LETRA===</code> block goes into the lyrics field.
+      </p>
+      <p>
+        The <code>[verse]</code> and <code>[chorus]</code> tags stay in English even though the words are
+        Spanish. That is what the model reads to build the song's shape, and it is the most common thing
+        to lose in a copy and paste. If the structure comes out wrong, check those tags first.
+      </p>
+      <p>
+        Set the duration to match <code>DURACIÓN OBJETIVO</code> from the prompt. Three and a half minutes
+        is 210 seconds. On an M2 Max a track that length renders in about a minute and a half.
+      </p>
+      <div class="note">
+        <p>
+          On 16 GB, use the smaller 2B model. The 4B is better and wants the memory to match. He can
+          change this later without reinstalling anything, so start small and hear the difference before
+          deciding.
+        </p>
+      </div>
+      <p>Save the result as <code>cancion.wav</code> in <code>~/gospel-song/</code>.</p>
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>
+          <code>cancion.wav</code> plays, a voice is singing his Spanish lyrics, and the length is roughly
+          what he asked for. The voice will not be his yet. That is the next half.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="double-rule">
+
+  <h2>Part two: Applio, the voice</h2>
+
+  <!-- ============ 5 ============ -->
+  <div class="session">
+    <div class="session-num">5</div>
+    <div class="session-body">
+      <h2>Install Python 3.10 alongside the one he has</h2>
+      <span class="timebox">5 minutes</span><span class="who">Screen share</span>
+      <p>
+        Session 1 of the Mac guide installed Python 3.12, which is what everything else in this build
+        uses. Applio wants 3.10. Homebrew keeps versions side by side, so this adds one without
+        disturbing the other.
+      </p>
+<pre class="term"><code>$ brew install python@3.10</code></pre>
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>Both of these answer, with different numbers:</p>
+      </div>
+<pre class="term"><code>$ python3.10 --version
+<span class="dim">Python 3.10.x</span>
+$ python3 --version
+<span class="dim">Python 3.12.x</span></code></pre>
+    </div>
+  </div>
+
+  <!-- ============ 6 ============ -->
+  <div class="session">
+    <div class="session-num">6</div>
+    <div class="session-body">
+      <h2>Clone Applio and run its installer</h2>
+      <span class="timebox">10 minutes, plus a long download</span><span class="who">Screen share</span>
+<pre class="term"><code>$ cd ~
+$ git clone https://github.com/IAHispano/Applio.git
+$ cd Applio
+$ chmod +x run-install.sh run-applio.sh
+$ ./run-install.sh</code></pre>
+      <p>
+        The installer builds its own virtual environment inside <code>~/Applio</code> and pulls the RVC
+        dependencies into it. This is the largest download in the build after the ACE-Step weights.
+      </p>
+      <div class="note">
+        <p>
+          Applio's documentation is written by a Spanish-speaking team, so when something needs looking up
+          he can read it in his own language. That is a real advantage over the original RVC project.
+        </p>
+      </div>
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>
+          <code>run-install.sh</code> ends without an error, and <code>ls -a ~/Applio</code> shows a
+          <code>.venv</code> folder. If it stopped partway, run it again: it picks up rather than starting
+          over.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 7 ============ -->
+  <div class="session">
+    <div class="session-num">7</div>
+    <div class="session-body">
+      <h2>Launch it and load his voice</h2>
+      <span class="timebox">10 minutes</span><span class="who">Screen share</span>
+<pre class="term"><code>$ cd ~/Applio &amp;&amp; ./run-applio.sh</code></pre>
+      <p>
+        A browser tab opens at <code>http://localhost:6969</code>. Note that this is a different port from
+        ACE-Step, which matters in a moment.
+      </p>
+      <p>
+        Go to the <strong>Inference</strong> tab. Put the <code>.pth</code> and <code>.index</code> pair
+        from the Colab training run into <code>~/Applio/logs/</code> in a folder named after the model,
+        then use the refresh control so the dropdown picks them up. Select the model, then select its
+        index file underneath.
+      </p>
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>
+          His model name appears in the voice dropdown on the Inference tab, and selecting it does not
+          throw an error in the Terminal window.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="double-rule">
+
+  <h2>Part three: the chain, every morning</h2>
+
+  <!-- ============ 8 ============ -->
+  <div class="session">
+    <div class="session-num">8</div>
+    <div class="session-body">
+      <h2>Four steps from lyrics to a finished vocal</h2>
+      <span class="timebox">about 10 minutes a song</span><span class="who">Him, alone</span>
+      <p>
+        Both apps can run at the same time, ACE-Step on 7860 and Applio on 6969, in two Terminal windows.
+        That is how a normal morning goes: generate in one tab, convert in the other.
+      </p>
+
+      <p><strong>One.</strong> ACE-Step writes the track. Save it as <code>cancion.wav</code>.</p>
+
+      <p><strong>Two.</strong> Demucs pulls the vocal away from everything else:</p>
+<pre class="term"><code>$ cd ~/gospel-song
+$ demucs --two-stems=vocals cancion.wav
+<span class="dim"># -> separated/htdemucs/cancion/{vocals.wav, no_vocals.wav}</span></code></pre>
+
+      <p>
+        <strong>Three.</strong> In Applio's Inference tab, feed it
+        <code>separated/htdemucs/cancion/vocals.wav</code> and save the output as
+        <code>vocals_clonada.wav</code>. This is the step that takes seconds, not minutes.
+      </p>
+
+      <p><strong>Four.</strong> ffmpeg puts his vocal back over the untouched instrumental:</p>
+<pre class="term"><code>$ ffmpeg -i separated/htdemucs/cancion/no_vocals.wav -i vocals_clonada.wav \
+    -filter_complex "[1:a]volume=1.15[v];[0:a][v]amix=inputs=2:duration=longest" \
+    -c:a pcm_s16le final.wav</code></pre>
+      <p>
+        The <code>volume=1.15</code> lifts the vocal slightly above the backing. It is the one number
+        worth adjusting by ear on the first few songs, and once it sounds right it stays right.
+      </p>
+      <div class="checkpoint">
+        <span class="checkpoint-label">Checkpoint</span>
+        <p>
+          <code>final.wav</code> is the whole song, the voice is recognisably his, and the instrumental
+          is undamaged. This is the file the video step in the pipeline plan expects.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 9 ============ -->
+  <div class="session">
+    <div class="session-num">9</div>
+    <div class="session-body">
+      <h2>The API, for when the script exists</h2>
+      <span class="timebox">Not yet</span><span class="who">Reference only</span>
+      <p>
+        <code>run_dia.py</code>, from prompt 2 on the Prompts page, cannot click buttons in a web
+        interface. ACE-Step ships a REST server for exactly that reason:
+      </p>
+<pre class="term"><code>$ uv run acestep-api
+<span class="dim"># http://localhost:8001</span></code></pre>
+      <p>
+        He does not need this until he has made a couple of weeks of videos by hand and is ready to
+        automate. It is here so that when the coding AI asks what it should call, the answer is already
+        written down.
+      </p>
+    </div>
+  </div>
+
+  <hr class="double-rule">
+
+  <section>
+    <h2>When something sounds wrong</h2>
+    <p class="kicker">Almost every bad result traces back to one of these five, and they are quick to tell apart.</p>
+
+    <div class="tbl-scroll">
+      <table>
+        <thead>
+          <tr><th>What he hears</th><th>Where it comes from</th><th>What to change</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Vocal sounds metallic or robotic</td>
+            <td>Applio</td>
+            <td>Lower the index rate. If it persists across every song, the dataset was speech rather than singing and needs rerecording.</td>
+          </tr>
+          <tr>
+            <td>Vocal is in the wrong octave</td>
+            <td>Applio</td>
+            <td>The transpose setting, in semitones. Twelve up or twelve down is one octave.</td>
+          </tr>
+          <tr>
+            <td>Song has no chorus, or repeats oddly</td>
+            <td>ACE-Step</td>
+            <td>The <code>[verse]</code> and <code>[chorus]</code> tags did not survive the paste. Check the lyrics box, not the model.</td>
+          </tr>
+          <tr>
+            <td>Backing instruments bleed into the converted vocal</td>
+            <td>Demucs</td>
+            <td>Separation was imperfect before Applio ever saw it. Try UVR with a different model for that song.</td>
+          </tr>
+          <tr>
+            <td>Track is much shorter or longer than asked</td>
+            <td>ACE-Step</td>
+            <td>The duration control, not the lyrics. Set it in seconds and regenerate.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="double-rule">
+
+  <section>
+    <h2>Everything on one screen</h2>
+    <div class="tbl-scroll">
+      <table>
+        <thead>
+          <tr><th>&nbsp;</th><th>ACE-Step 1.5</th><th>Applio</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Job</strong></td><td>Writes and sings the song</td><td>Makes the singing his</td></tr>
+          <tr><td><strong>Python</strong></td><td>3.11 or 3.12</td><td>3.10</td></tr>
+          <tr><td><strong>Installs with</strong></td><td><code>uv sync</code></td><td><code>./run-install.sh</code></td></tr>
+          <tr><td><strong>Starts with</strong></td><td><code>./start_gradio_ui_macos.sh</code></td><td><code>./run-applio.sh</code></td></tr>
+          <tr><td><strong>Port</strong></td><td>7860</td><td>6969</td></tr>
+          <tr><td><strong>Licence</strong></td><td class="yes">Apache 2.0, commercial use fine</td><td class="yes">MIT, commercial use fine</td></tr>
+          <tr><td><strong>Trains on the Mac</strong></td><td>Nothing to train</td><td class="no">No, use Colab</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Both licences are the reason this pair is the ending point rather than a stepping stone. A channel
+      built on them can monetise without a subscription and without a rights problem in the catalogue.
+    </p>
+  </section>
+
+  <p class="cap">
+    Companion to the pipeline plan and the Mac build guide. Verified 17 August 2026 against both
+    repositories: ACE-Step 1.5 documents <code>uv sync</code> and
+    <code>start_gradio_ui_macos.sh</code> with the Gradio UI on 7860 and the API on 8001, and Applio
+    documents <code>run-install.sh</code> and <code>run-applio.sh</code> with the UI on 6969 and Python
+    3.10. Apple Silicon support in both projects moves quickly, so if a command has changed, each
+    repository's own README is the authority.
+  </p>
+
+</div>

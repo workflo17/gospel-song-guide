@@ -1,0 +1,651 @@
+<title>The first three days</title>
+<style>
+  /* ---- tokens: light is the base, both dark states re-declare the same set ---- */
+  :root {
+    --paper:      #F6F3F1;
+    --surface:    #EFEAE6;
+    --sunken:     #E7E0DA;
+    --ink:        #1B1614;
+    --ink-soft:   #5C534E;
+    --ink-faint:  #736860;
+    --rubric:     #A81F16;
+    --rubric-bg:  #F6E7E4;
+    --gilt:       #8A6B2C;
+    --gilt-bg:    #F5EEDF;
+    --rule:       #D6CCC4;
+    --rule-hard:  #B8AAA0;
+    --ok:         #3F6B45;
+    --ok-bg:      #E6EFE6;
+    --warn:       #9A6210;
+    --warn-bg:    #F7EDDC;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:      #17110F;
+      --surface:    #201917;
+      --sunken:     #120D0C;
+      --ink:        #EDE5DF;
+      --ink-soft:   #B3A79F;
+      --ink-faint:  #928279;
+      --rubric:     #E8756A;
+      --rubric-bg:  #2E1A18;
+      --gilt:       #C9A961;
+      --gilt-bg:    #2A2318;
+      --rule:       #352925;
+      --rule-hard:  #4A3B35;
+      --ok:         #7FB388;
+      --ok-bg:      #1B2A1D;
+      --warn:       #D9A24E;
+      --warn-bg:    #2C2113;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:      #17110F;
+    --surface:    #201917;
+    --sunken:     #120D0C;
+    --ink:        #EDE5DF;
+    --ink-soft:   #B3A79F;
+    --ink-faint:  #928279;
+    --rubric:     #E8756A;
+    --rubric-bg:  #2E1A18;
+    --gilt:       #C9A961;
+    --gilt-bg:    #2A2318;
+    --rule:       #352925;
+    --rule-hard:  #4A3B35;
+    --ok:         #7FB388;
+    --ok-bg:      #1B2A1D;
+    --warn:       #D9A24E;
+    --warn-bg:    #2C2113;
+  }
+
+  :root {
+    --serif: "Palatino Linotype", "Iowan Old Style", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Cascadia Mono", "JetBrains Mono", Consolas, "SF Mono", monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16.5px;
+    line-height: 1.62;
+    margin: 0;
+    padding: 0 1.5rem 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 62rem; margin: 0 auto; }
+
+  /* ---------------- masthead ---------------- */
+  .masthead { padding: 4.5rem 0 0; }
+  .eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.19em; text-transform: uppercase;
+    color: var(--rubric); font-weight: 600; margin: 0 0 1.4rem;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5.5vw, 3.5rem);
+    line-height: 1.08; font-weight: 400; margin: 0 0 1rem;
+    letter-spacing: -0.015em; text-wrap: balance; max-width: 18ch;
+  }
+  h1 em { font-style: italic; color: var(--rubric); }
+  .standfirst {
+    font-family: var(--serif); font-size: 1.2rem; line-height: 1.55;
+    color: var(--ink-soft); max-width: 56ch; margin: 0 0 2rem;
+  }
+
+  .double-rule { border: 0; margin: 3.5rem 0; height: 4px; position: relative; }
+  .double-rule::before, .double-rule::after {
+    content: ""; position: absolute; left: 0; right: 0; background: var(--rule-hard);
+  }
+  .double-rule::before { top: 0; height: 2px; }
+  .double-rule::after  { top: 3px; height: 1px; }
+
+  .meta-strip {
+    display: flex; flex-wrap: wrap; gap: 0.4rem 2.2rem;
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 0.9rem 0; font-size: 0.8rem; color: var(--ink-faint);
+  }
+  .meta-strip b { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------------- type ---------------- */
+  h2 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(1.55rem, 3.2vw, 2.05rem); line-height: 1.18;
+    margin: 0 0 0.4rem; letter-spacing: -0.01em; text-wrap: balance;
+  }
+  h3 {
+    font-family: var(--sans); font-weight: 650;
+    font-size: 1.02rem; line-height: 1.35; margin: 0 0 0.5rem;
+    letter-spacing: -0.005em;
+  }
+  p { margin: 0 0 1rem; max-width: 68ch; }
+  .lede { color: var(--ink-soft); font-size: 0.98rem; }
+  a { color: var(--rubric); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--rubric); outline-offset: 3px; border-radius: 2px;
+  }
+  code {
+    font-family: var(--mono); font-size: 0.86em;
+    background: var(--sunken); padding: 0.1em 0.35em; border-radius: 3px;
+  }
+  strong { font-weight: 650; }
+
+  /* ---------------- section scaffolding ---------------- */
+  .part {
+    display: flex; align-items: baseline; gap: 0.9rem;
+    margin: 4rem 0 0.3rem;
+  }
+  .part-tag {
+    font-family: var(--serif); font-size: 0.78rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--gilt); font-weight: 600;
+    white-space: nowrap;
+  }
+  .part-line { flex: 1; height: 1px; background: var(--rule); }
+
+  .step { display: grid; grid-template-columns: 3.2rem 1fr; gap: 0 1.3rem; margin: 2.6rem 0 0; }
+  .step-n {
+    font-family: var(--serif); font-size: 1.9rem; line-height: 1;
+    color: var(--rubric); font-weight: 400; padding-top: 0.1rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .step-body { min-width: 0; }
+  .step-when {
+    font-size: 0.72rem; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 600; margin: 0 0 0.35rem;
+  }
+  @media (max-width: 620px) {
+    .step { grid-template-columns: 1fr; gap: 0; }
+    .step-n { font-size: 1.4rem; margin-bottom: 0.2rem; }
+  }
+
+  /* ---------------- code ---------------- */
+  pre {
+    background: var(--sunken); border: 1px solid var(--rule);
+    border-left: 3px solid var(--rule-hard);
+    padding: 0.85rem 1rem; margin: 0 0 1rem;
+    overflow-x: auto; font-family: var(--mono);
+    font-size: 0.8rem; line-height: 1.6; color: var(--ink);
+  }
+  pre .c { color: var(--ink-faint); }
+  pre .g { color: var(--ok); }
+
+  /* ---------------- callouts ---------------- */
+  .note, .stop, .win {
+    border: 1px solid var(--rule); border-left-width: 3px;
+    padding: 1rem 1.15rem; margin: 0 0 1.2rem; background: var(--surface);
+  }
+  .note { border-left-color: var(--gilt); background: var(--gilt-bg); }
+  .stop { border-left-color: var(--rubric); background: var(--rubric-bg); }
+  .win  { border-left-color: var(--ok); background: var(--ok-bg); }
+  .note h3, .stop h3, .win h3 { margin-bottom: 0.4rem; }
+  .stop h3 { color: var(--rubric); }
+  .win h3 { color: var(--ok); }
+  .note h3 { color: var(--gilt); }
+  .note p:last-child, .stop p:last-child, .win p:last-child { margin-bottom: 0; }
+
+  .check {
+    border-top: 1px solid var(--rule); margin-top: 1rem; padding-top: 0.7rem;
+    font-size: 0.9rem; color: var(--ink-soft);
+  }
+  .check b {
+    display: block; font-size: 0.7rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ok); margin-bottom: 0.25rem;
+  }
+
+  /* ---------------- cards ---------------- */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 1.2rem; margin: 1.6rem 0 0; }
+  .card { border: 1px solid var(--rule); border-top: 2px solid var(--rubric); background: var(--surface); padding: 1.15rem 1.25rem; }
+  .card p:last-child { margin-bottom: 0; }
+  .card p { font-size: 0.94rem; }
+
+  /* ---------------- table ---------------- */
+  .tablewrap { overflow-x: auto; margin: 0 0 1.2rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; min-width: 34rem; }
+  th, td { text-align: left; padding: 0.6rem 0.9rem 0.6rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th {
+    font-size: 0.7rem; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 650; border-bottom: 1px solid var(--rule-hard);
+  }
+  td b { font-weight: 650; }
+
+  .colophon {
+    margin-top: 4rem; padding-top: 1.2rem; border-top: 1px solid var(--rule);
+    font-size: 0.82rem; color: var(--ink-faint); max-width: 68ch;
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Setup runbook &middot; companion to the pipeline plan</p>
+    <h1>The first <em>three days</em></h1>
+    <p class="standfirst">
+      What to do between now and Friday, in order. Three songs written today from the readings for
+      19, 20 and 21 August, his own voice on the vocal, and a video that shows the passage it came from.
+    </p>
+    <div class="meta-strip">
+      <span><b>Songs</b> 19, 20, 21 Aug 2026</span>
+      <span><b>Readings pulled</b> 17 Aug</span>
+      <span><b>Lyrics</b> Grok</span>
+      <span><b>Music</b> ACE&#8209;Step 1.5</span>
+      <span><b>Voice</b> Applio</span>
+    </div>
+  </header>
+
+  <hr class="double-rule">
+
+  <h2>Two things that change the plan he has now</h2>
+  <p class="lede">
+    Both of them decide what he should do tonight, and both are easy to get backwards.
+  </p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Neither app does the other's job</h3>
+      <p>
+        ACE&#8209;Step writes the song and sings it in a voice that is not his. Applio takes that finished
+        vocal and replaces the timbre with his. There is no "use my voice" setting in one and no "write me
+        a song" setting in the other. The build is the handoff between them.
+      </p>
+      <p>
+        Voice conversion runs <b>after</b> the song exists, so the order never changes: ACE&#8209;Step
+        writes the track, Demucs pulls the vocal out, Applio makes that vocal his, ffmpeg puts it back
+        over the instrumental. Every command is on the
+        <a href="https://workflo17.github.io/gospel-song-guide/apps.html">ACE&#8209;Step and Applio page</a>.
+      </p>
+    </div>
+    <div class="card">
+      <h3>The download is not what is holding him up</h3>
+      <p>
+        Applio with no trained model does nothing. It needs a <code>.pth</code> and an <code>.index</code>
+        file, and those come from ten to thirty minutes of him singing, sliced into clips and trained on a
+        free Colab GPU.
+      </p>
+      <p>
+        So the recording session is the real gate, not the install. He can do it tonight while ACE&#8209;Step
+        is still coming down the wire.
+      </p>
+    </div>
+  </div>
+
+  <div class="part"><span class="part-tag">Part A &middot; Today</span><span class="part-line"></span></div>
+  <h2>Three songs, written this afternoon</h2>
+  <p class="lede">About forty minutes, and none of it needs a GPU.</p>
+
+  <div class="step">
+    <div class="step-n">1</div>
+    <div class="step-body">
+      <p class="step-when">Done already &middot; 2 minutes</p>
+      <h3>Pull the three readings</h3>
+      <p>
+        <code>gospel.py</code> takes any date within thirty days and writes clean JSON. All three days
+        came down in one pass:
+      </p>
+<pre><span class="c">$</span> for d in 2026-08-19 2026-08-20 2026-08-21; do python gospel.py $d --out gospel-$d.json; done
+<span class="g">2026-08-19 [SP] -&gt; gospel-2026-08-19.json
+  gospel     Mt 20,1-16a.  (1769 chars)
+  commentary Autor anónimo, siglo IX, Italia  (1409 chars)
+2026-08-20 [SP] -&gt; gospel-2026-08-20.json
+  gospel     Mt 22,1-14.  (1617 chars)
+  commentary San Gregorio de Nisa (c. 335-395), monje, obispo  (1328 chars)
+2026-08-21 [SP] -&gt; gospel-2026-08-21.json
+  gospel     Mt 22,34-40.  (681 chars)
+  commentary San Agustín (354-430), obispo de Hipona  (1208 chars)</span></pre>
+      <p>
+        Wednesday is the workers in the vineyard, Thursday the wedding banquet, Friday the greatest
+        commandment. Three parables that do not sound alike, which is a good week to start on.
+      </p>
+      <div class="note">
+        <h3>Why not the Vatican News page</h3>
+        <p>
+          It is a good page to read in the morning, but it is built for reading rather than for scripts.
+          It serves today only, the readings sit inside the site furniture, and it carries no daily
+          commentary. Evangelizo, the feed behind evangeliodeldia.org, returns all four readings plus a
+          commentary by a Church Father or a saint in a single call, with no key and no signup.
+        </p>
+        <p>
+          That commentary is the reason to prefer it. It hands the song a specific angle, and a lyric
+          written from the angle does not come out sounding like a summary of the passage.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">2</div>
+    <div class="step-body">
+      <p class="step-when">Done already &middot; 1 minute</p>
+      <h3>Wrap each reading in the songwriting prompt</h3>
+      <p>
+        Prompt 1 on the <a href="https://workflo17.github.io/gospel-song-guide/prompts.html">Prompts
+        page</a> tells Grok to go and look the day up
+        itself. That works for today and fails for Thursday and Friday, which have not happened yet.
+        So for these three, the Gospel and the commentary go into the prompt with the text already in it.
+      </p>
+<pre><span class="c">$</span> for d in 2026-08-19 2026-08-20 2026-08-21; do python make_prompt.py gospel-$d.json --out letras/$d-prompt.txt; done
+<span class="g">gospel-2026-08-19.json -&gt; letras/2026-08-19-prompt.txt (5037 chars)
+gospel-2026-08-20.json -&gt; letras/2026-08-20-prompt.txt (4797 chars)
+gospel-2026-08-21.json -&gt; letras/2026-08-21-prompt.txt (3785 chars)</span></pre>
+      <p>
+        Everything else about the prompt is unchanged, including the seven <code>===SECTION===</code>
+        markers the later script depends on.
+      </p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">3</div>
+    <div class="step-body">
+      <p class="step-when">Him, today &middot; 20 minutes</p>
+      <h3>Run the three prompts in Grok, one chat each</h3>
+      <p>
+        Not the Automation yet. Three separate chats, so Wednesday's vineyard does not bleed into
+        Thursday's wedding feast. Paste one file, save the reply as
+        <code>letras/2026-08-19-letra.txt</code>, start a new chat, repeat.
+      </p>
+      <p>
+        Before saving each one, check that all seven blocks came back and that the chorus is identical
+        every time it appears. If Grok summarised the passage instead of writing from the commentary,
+        say so and ask again. That correction costs nothing now and costs a rerender later.
+      </p>
+      <div class="check">
+        <b>Check</b>
+        Three files, each with <code>===CITA===</code> through <code>===UNA_LINEA_PARA_TI===</code> present.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">4</div>
+    <div class="step-body">
+      <p class="step-when">Him, today &middot; 10 minutes</p>
+      <h3>Rewrite one line in each chorus</h3>
+      <p>
+        Every reply ends with <code>===UNA_LINEA_PARA_TI===</code>, which names one line of the chorus for
+        him to rewrite in his own words. Three lines across three songs.
+      </p>
+      <p>
+        This is not a formality. It is the human authorship that keeps the channel clear of YouTube's
+        inauthentic content policy, and it is also the quickest way to stop the songs sounding like a
+        model wrote them.
+      </p>
+    </div>
+  </div>
+
+  <div class="part"><span class="part-tag">Part B &middot; This week</span><span class="part-line"></span></div>
+  <h2>Getting his voice onto the vocal</h2>
+  <p class="lede">One long session that happens once, then seconds a day forever after.</p>
+
+  <div class="step">
+    <div class="step-n">5</div>
+    <div class="step-body">
+      <p class="step-when">Him, alone &middot; 45 minutes</p>
+      <h3>Record the singing dataset</h3>
+      <p>
+        Ten to thirty minutes of him <b>singing</b>, not talking. The model learns his timbre across his
+        range, and a dataset of speech gives a thin, strained result the moment the chorus goes high.
+      </p>
+      <p>
+        Solo and dry: no backing track, no reverb, no autotune. If a backing track bleeds in, the model
+        learns the backing track too. Cover the low verses and the high choruses, same mic, same room,
+        one sitting. GarageBand is already on the Mac and is more than enough. Export with Share, Export
+        Song to Disk, and choose WAV.
+      </p>
+<pre><span class="c">$</span> cd ~/gospel-song &amp;&amp; mkdir -p dataset
+<span class="c">$</span> ffmpeg -i canto_crudo.wav -f segment -segment_time 10 \
+    -ac 1 -ar 44100 -c:a pcm_s16le dataset/voz_%03d.wav</pre>
+      <p>Then delete any clip that is silence, a cough, or a false start.</p>
+      <div class="check">
+        <b>Check</b>
+        <code>ls dataset | wc -l</code> shows at least 60 files, and three at random are clean solo singing.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">6</div>
+    <div class="step-body">
+      <p class="step-when">Screen share &middot; 20 minutes, then an hour of waiting</p>
+      <h3>Train the voice in Colab</h3>
+      <p>
+        Zip the dataset, put it on his Google Drive, and open the Applio Colab notebook from the Applio
+        repository. Set Runtime, Change runtime type, T4 GPU <b>before</b> running any cell. Sample rate
+        40k, around 300 epochs, save every 50.
+      </p>
+      <div class="stop">
+        <h3>Do not let him train this on the Mac</h3>
+        <p>
+          RVC training does not properly use the Apple GPU. It falls back to the CPU silently, prints
+          epochs, and never meaningfully progresses. People report six hours and more for a thirty minute
+          dataset. This is the single most likely way for him to give up in week one.
+        </p>
+      </div>
+      <p>
+        Saving every 50 epochs matters because free Colab sessions get reclaimed. A disconnect at epoch
+        240 then costs one checkpoint instead of the whole run.
+      </p>
+      <div class="check">
+        <b>Check</b>
+        A <code>.pth</code> and an <code>.index</code> sit in <code>~/gospel-song/voz/</code>, and the
+        <code>.pth</code> is somewhere between 50 and 200 MB. A few kilobytes means training never finished.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">7</div>
+    <div class="step-body">
+      <p class="step-when">Him &middot; 5 minutes a song</p>
+      <h3>Make the track in ACE-Step</h3>
+      <p>
+        Paste the <code>===LETRA===</code> block into the lyrics field and the <code>===ESTILO===</code>
+        block into the tags field, then set the duration in seconds. The <code>[verse]</code> and
+        <code>[chorus]</code> tags stay in English even though the words are Spanish, because that is what
+        the model reads to structure the song. Losing them in a paste is the most common cause of a track
+        that comes back shapeless.
+      </p>
+      <p>
+        Install and first launch take an evening, mostly downloading. That is all covered command by
+        command on the
+        <a href="https://workflo17.github.io/gospel-song-guide/apps.html">ACE&#8209;Step and Applio page</a>.
+      </p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">8</div>
+    <div class="step-body">
+      <p class="step-when">Local &middot; about 3 minutes a song</p>
+      <h3>Split the vocal, convert it, mix it back</h3>
+      <p>Demucs separates the sung vocal from everything else:</p>
+<pre><span class="c">$</span> demucs --two-stems=vocals cancion.wav
+<span class="c"># -&gt; separated/htdemucs/cancion/{vocals.wav, no_vocals.wav}</span></pre>
+      <p>
+        Open Applio, load the <code>.pth</code> and <code>.index</code> from step 6 under Inference, feed
+        it <code>vocals.wav</code>, and save the result as <code>vocals_clonada.wav</code>. Then put it
+        back over the instrumental:
+      </p>
+<pre><span class="c">$</span> ffmpeg -i separated/htdemucs/cancion/no_vocals.wav -i vocals_clonada.wav \
+    -filter_complex "[1:a]volume=1.15[v];[0:a][v]amix=inputs=2:duration=longest" \
+    -c:a pcm_s16le final.wav</pre>
+      <div class="win">
+        <h3>The cheapest good decision he will make</h3>
+        <p>
+          Any spoken part, an intro line or the citation read aloud, he should record himself. It takes
+          ninety seconds, it sounds better than any clone, and it is the strongest defence he has against
+          the inauthentic content policy. Save the cloning for the singing, which he cannot perform daily.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="part"><span class="part-tag">Part C &middot; This week</span><span class="part-line"></span></div>
+  <h2>The video, with the reading on screen</h2>
+  <p class="lede">A lyric video with a citation card gets him to the three to five minutes he wants.</p>
+
+  <div class="step">
+    <div class="step-n">9</div>
+    <div class="step-body">
+      <p class="step-when">Local &middot; about a minute a song</p>
+      <h3>Get word timings from the audio</h3>
+      <p>
+        Run faster-whisper over <code>final.wav</code> with word timestamps and write an
+        <code>.ass</code> subtitle file. Because the exact lyrics are already known from step 3, this is
+        forced alignment rather than transcription, so it lands accurately even on sung Spanish.
+      </p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">10</div>
+    <div class="step-body">
+      <p class="step-when">Local &middot; a few minutes to render</p>
+      <h3>Render it in one ffmpeg call</h3>
+      <p>
+        One still image with a slow push and the lyrics burned in on time. For the Gospel references he
+        wants alongside the song, the cheapest version that works is a fifteen second opening card
+        carrying the citation and a short line from the passage, then the lyrics for the rest. It reads
+        clearly on a phone and adds nothing to the daily workload.
+      </p>
+<pre><span class="c">$</span> ffmpeg -loop 1 -i fondo.jpg -i final.wav \
+    -vf "scale=3840:-2,\
+zoompan=z='min(zoom+0.00015,1.18)':d=25*215:\
+x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s=1920x1080:fps=25,\
+subtitles=letra.ass" \
+    -c:v libx264 -preset medium -crf 18 -pix_fmt yuv420p \
+    -c:a aac -b:a 192k -shortest salida.mp4</pre>
+      <p>
+        <code>d=25*215</code> is the pan length in frames, which is 25 fps times the song length in
+        seconds. Read it from the actual audio duration. Hard-code it and the push finishes early, then
+        the picture sits frozen for the last minute.
+      </p>
+      <div class="check">
+        <b>Check</b>
+        The MP4 plays end to end, the words land on the beat, and the citation is readable at phone size.
+      </div>
+    </div>
+  </div>
+
+  <div class="part"><span class="part-tag">Part D &middot; Later</span><span class="part-line"></span></div>
+  <h2>Making it wake up without him</h2>
+  <p class="lede">Both of these are worth doing, and both are worth doing late.</p>
+
+  <div class="step">
+    <div class="step-n">11</div>
+    <div class="step-body">
+      <p class="step-when">Him, alone &middot; 15 minutes</p>
+      <h3>Save the songwriter as a Grok Automation</h3>
+      <p>
+        In Grok: Automations, new task, paste prompt 1 from the Prompts page, daily at 05:00 in his
+        timezone, delivery by email. Automations need a paid tier, either X Premium+ or a grok.com
+        subscription. From then on the lyrics arrive before he wakes up.
+      </p>
+      <p>
+        Then leave it alone for three mornings and read what it sends. If the songs are not good, the
+        problem is the prompt. Fixing a prompt costs nothing. Fixing a prompt after building a pipeline
+        around it costs a weekend.
+      </p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-n">12</div>
+    <div class="step-body">
+      <p class="step-when">After two weeks by hand</p>
+      <h3>Have a coding AI write <code>run_dia.py</code></h3>
+      <p>
+        Prompt 2 on the Prompts page turns steps 7 through 10 into one script that reads the email, makes
+        the track, converts the voice, cuts the video, and leaves an MP4 in
+        <code>salida/AAAA-MM-DD/</code>. It deliberately stops there and never uploads.
+      </p>
+      <p>
+        The reason to wait is simple. Automating a process he has not performed yet produces a script that
+        automates the wrong thing.
+      </p>
+    </div>
+  </div>
+
+  <hr class="double-rule">
+
+  <h2>Three things that can cost him the channel</h2>
+  <p class="lede">None of them are hard. All of them are much harder to fix retroactively.</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>A fully automatic channel is what the policy was written to catch</h3>
+      <p>
+        Mass-produced AI uploads earn a warning, then a 90 day suspension, then permanent removal from the
+        Partner Program. What keeps him on the right side of it is small: a real spoken intro in his own
+        voice and the one hand-edited chorus line, every day. That makes it AI-assisted work with human
+        direction, which is explicitly allowed. Build the habit on day one, because adding it after a
+        strike does not undo the strike.
+      </p>
+    </div>
+    <div class="card">
+      <h3>The Spanish scripture text is a copyrighted translation</h3>
+      <p>
+        Lyrics <b>inspired by</b> the passage are his own work and are safe to publish and monetise. The
+        translation set to music, word for word, is not. The prompt already tells Grok to paraphrase.
+        Cite the passage in the description and keep the lyric original.
+      </p>
+    </div>
+    <div class="card">
+      <h3>Every upload needs the synthetic content disclosure</h3>
+      <p>
+        YouTube requires it for altered or synthetic media, and the voice model puts him squarely in
+        scope. It is a checkbox at upload time. Ticking it costs nothing. Skipping it puts the whole
+        catalogue at risk over a formality.
+      </p>
+    </div>
+  </div>
+
+  <hr class="double-rule">
+
+  <h2>What to do, in what order</h2>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>When</th><th>What</th><th>Ends with</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Today</b></td>
+          <td>Paste the three prompt files into Grok, one chat each. Rewrite one chorus line per song.</td>
+          <td>Three sets of lyrics, saved</td>
+        </tr>
+        <tr>
+          <td><b>Tonight</b></td>
+          <td>Record the singing dataset while ACE&#8209;Step finishes downloading.</td>
+          <td>60+ clips in <code>dataset/</code></td>
+        </tr>
+        <tr>
+          <td><b>Tomorrow</b></td>
+          <td>Train the voice in Colab. Meanwhile install ACE-Step and make Wednesday's track.</td>
+          <td><code>.pth</code> and <code>.index</code></td>
+        </tr>
+        <tr>
+          <td><b>Wednesday</b></td>
+          <td>Split, convert, mix, render, upload the 19th with the disclosure ticked.</td>
+          <td>First video live</td>
+        </tr>
+        <tr>
+          <td><b>Then</b></td>
+          <td>Repeat by hand for two weeks. Only then save the Grok Automation and build the script.</td>
+          <td>A pipeline worth automating</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="colophon">
+    Readings for 19, 20 and 21 August 2026 fetched from the Evangelizo feed on 17 August 2026 and verified
+    present with commentary. The prompt files hold the Spanish scripture text and stay on his machine,
+    gitignored, for the licence reason above. Companion to the pipeline plan and the Mac setup guide.
+  </p>
+
+</div>

@@ -2,6 +2,7 @@
 *.json
 hoy.json
 today.json
+letras/
 
 # superseded build output, docs/ is the live one
 site/

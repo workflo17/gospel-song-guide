@@ -19,6 +19,7 @@ OUT = ROOT / "docs"
 PAGES = [
     ("workflow.html", "index.html", "The pipeline"),
     ("mac-setup.html", "mac.html", "Mac setup"),
+    ("acestep-applio.html", "apps.html", "ACE-Step + Applio"),
     ("prompts.html", "prompts.html", "Prompts"),
 ]
 
