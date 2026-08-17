@@ -1,0 +1,608 @@
+<title>Prompts to copy, paste, and edit</title>
+
+<style>
+  /* ---- tokens: light is the base, both dark states re-declare the same set ---- */
+  :root {
+    --paper:      #F6F3F1;
+    --surface:    #EFEAE6;
+    --sunken:     #E7E0DA;
+    --ink:        #1B1614;
+    --ink-soft:   #5C534E;
+    --ink-faint:  #736860;
+    --rubric:     #A81F16;
+    --rubric-bg:  #F6E7E4;
+    --gilt:       #8A6B2C;
+    --gilt-bg:    #F2EADA;
+    --rule:       #D6CCC4;
+    --rule-hard:  #B8AAA0;
+    --ok:         #3F6B45;
+    --ok-bg:      #E6EDE6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:      #17110F;
+      --surface:    #201917;
+      --sunken:     #120D0C;
+      --ink:        #EDE5DF;
+      --ink-soft:   #B3A79F;
+      --ink-faint:  #928279;
+      --rubric:     #E8756A;
+      --rubric-bg:  #2E1A18;
+      --gilt:       #C9A961;
+      --gilt-bg:    #2A2314;
+      --rule:       #352925;
+      --rule-hard:  #4A3B35;
+      --ok:         #7FB388;
+      --ok-bg:      #1A241B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:      #17110F;
+    --surface:    #201917;
+    --sunken:     #120D0C;
+    --ink:        #EDE5DF;
+    --ink-soft:   #B3A79F;
+    --ink-faint:  #928279;
+    --rubric:     #E8756A;
+    --rubric-bg:  #2E1A18;
+    --gilt:       #C9A961;
+    --gilt-bg:    #2A2314;
+    --rule:       #352925;
+    --rule-hard:  #4A3B35;
+    --ok:         #7FB388;
+    --ok-bg:      #1A241B;
+  }
+
+  :root {
+    --serif: "Palatino Linotype", "Iowan Old Style", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Cascadia Mono", "JetBrains Mono", Consolas, "SF Mono", Menlo, monospace;
+    --measure: 68ch;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 16.5px; line-height: 1.62;
+    margin: 0; padding: 0 1.5rem 6rem; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 62rem; margin: 0 auto; }
+
+  /* ---------------- masthead ---------------- */
+  .masthead { padding: 4.5rem 0 0; }
+  .eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.19em; text-transform: uppercase;
+    color: var(--rubric); font-weight: 600; margin: 0 0 1.4rem;
+  }
+  h1 {
+    font-family: var(--serif); font-size: clamp(2.1rem, 5vw, 3.2rem);
+    line-height: 1.08; font-weight: 400; margin: 0 0 1rem;
+    letter-spacing: -0.015em; text-wrap: balance; max-width: 20ch;
+  }
+  h1 em { font-style: italic; color: var(--rubric); }
+  .standfirst {
+    font-family: var(--serif); font-size: 1.2rem; line-height: 1.55;
+    color: var(--ink-soft); max-width: 54ch; margin: 0 0 2rem;
+  }
+
+  .double-rule { border: 0; margin: 3.5rem 0; height: 4px; position: relative; }
+  .double-rule::before, .double-rule::after {
+    content: ""; position: absolute; left: 0; right: 0; background: var(--rule-hard);
+  }
+  .double-rule::before { top: 0; height: 2px; }
+  .double-rule::after  { top: 3px; height: 1px; }
+
+  .meta-strip {
+    display: flex; flex-wrap: wrap; gap: 0 2.2rem;
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 0.9rem 0; font-size: 0.8rem; color: var(--ink-faint);
+  }
+  .meta-strip b { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------------- type ---------------- */
+  h2 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(1.5rem, 3vw, 1.95rem); line-height: 1.18;
+    margin: 0 0 0.4rem; letter-spacing: -0.01em; text-wrap: balance;
+  }
+  h3 {
+    font-family: var(--sans); font-size: 1.02rem; font-weight: 650;
+    margin: 2rem 0 0.5rem; letter-spacing: -0.005em;
+  }
+  h4 {
+    font-family: var(--sans); font-size: 0.73rem; font-weight: 700;
+    letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-faint);
+    margin: 1.7rem 0 0.55rem;
+  }
+  p, li { max-width: var(--measure); }
+  p { margin: 0 0 1.05rem; }
+  ul, ol { margin: 0 0 1.15rem; padding-left: 1.25rem; }
+  li { margin-bottom: 0.42rem; }
+  a { color: var(--rubric); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible, button:focus-visible {
+    outline: 2px solid var(--rubric); outline-offset: 3px; border-radius: 2px;
+  }
+  strong { font-weight: 650; }
+  code {
+    font-family: var(--mono); font-size: 0.86em; background: var(--sunken);
+    padding: 0.1em 0.34em; border-radius: 3px; border: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: var(--serif); font-style: italic; font-size: 1.05rem;
+    color: var(--gilt); margin: 0 0 1.6rem; max-width: 56ch;
+  }
+
+  /* ---------------- prompt card ---------------- */
+  .promptbox {
+    border: 1px solid var(--rule-hard); border-radius: 4px;
+    margin: 1.5rem 0 2.6rem; overflow: hidden; background: var(--surface);
+  }
+  .promptbox-head {
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .promptbox-title {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--ink-soft); margin-right: auto;
+  }
+  .promptbox-where {
+    font-size: 0.72rem; font-weight: 650; color: var(--rubric);
+    background: var(--rubric-bg); padding: 0.16rem 0.5rem; border-radius: 2px;
+  }
+  .copybtn {
+    font-family: var(--sans); font-size: 0.74rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--paper); background: var(--ink); border: 1px solid var(--ink);
+    padding: 0.34rem 0.85rem; border-radius: 3px; cursor: pointer;
+  }
+  .copybtn:hover { background: var(--rubric); border-color: var(--rubric); }
+  .copybtn[data-done="1"] { background: var(--ok); border-color: var(--ok); }
+  .promptbox pre { margin: 0; border: 0; border-radius: 0; background: var(--sunken); }
+  .promptbox .edit {
+    background: var(--gilt-bg); color: var(--ink);
+    box-shadow: inset 2px 0 0 var(--gilt); display: inline-block;
+    width: 100%; padding-left: 0.4rem;
+  }
+
+  /* ---------------- code ---------------- */
+  pre {
+    font-family: var(--mono); font-size: 0.795rem; line-height: 1.62;
+    background: var(--sunken); border: 1px solid var(--rule);
+    padding: 1rem 1.15rem; overflow-x: auto; margin: 0 0 1.2rem;
+    border-radius: 3px; color: var(--ink); white-space: pre;
+  }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+  .cap { font-size: 0.76rem; color: var(--ink-faint); margin: -2rem 0 2.6rem; max-width: var(--measure); }
+
+  /* ---------------- rubric / note ---------------- */
+  .rubric {
+    border-left: 3px solid var(--rubric); background: var(--rubric-bg);
+    padding: 0.95rem 1.15rem; margin: 1.3rem 0; max-width: var(--measure);
+  }
+  .rubric-label {
+    display: block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--rubric); margin-bottom: 0.4rem;
+  }
+  .rubric p { margin: 0; font-size: 0.94rem; }
+  .rubric p + p { margin-top: 0.6rem; }
+
+  .note {
+    border-left: 2px solid var(--rule-hard); padding: 0.15rem 0 0.15rem 1.05rem;
+    margin: 1.3rem 0; color: var(--ink-soft); font-size: 0.94rem; max-width: var(--measure);
+  }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 0.55rem; }
+
+  .legend {
+    display: flex; align-items: center; gap: 0.6rem; font-size: 0.83rem;
+    color: var(--ink-soft); margin: 0 0 2rem; max-width: var(--measure);
+  }
+  .legend .swatch {
+    width: 2.2rem; height: 1.1rem; background: var(--gilt-bg);
+    box-shadow: inset 2px 0 0 var(--gilt); border-radius: 2px; flex: none;
+  }
+
+  /* ---------------- tables ---------------- */
+  .tbl-scroll { overflow-x: auto; margin: 0 0 0.6rem; border-bottom: 1px solid var(--rule); }
+  table { border-collapse: collapse; width: 100%; min-width: 36rem; font-size: 0.855rem; }
+  th {
+    text-align: left; font-size: 0.68rem; letter-spacing: 0.11em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 700; padding: 0 0.85rem 0.55rem 0;
+    border-bottom: 1.5px solid var(--rule-hard); white-space: nowrap;
+  }
+  td { padding: 0.62rem 0.85rem 0.62rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child, th:first-child { padding-left: 0; }
+
+  details { border-top: 1px solid var(--rule); padding: 0.85rem 0; max-width: var(--measure); }
+  summary { cursor: pointer; font-weight: 600; font-size: 0.94rem; }
+  details[open] summary { margin-bottom: 0.8rem; color: var(--rubric); }
+
+  footer {
+    margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
+    font-size: 0.8rem; color: var(--ink-faint); max-width: var(--measure);
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Copy, paste, edit &middot; the three prompts</p>
+    <h1>Prompts to copy,<br><em>paste, and edit</em></h1>
+    <p class="standfirst">
+      One prompt writes the song every morning. One builds the automation. One rescues him when
+      something breaks. Every editable line is marked in gold.
+    </p>
+    <div class="meta-strip">
+      <span><b>Language</b> Spanish, ready to paste</span>
+      <span><b>Works with</b> Grok, Claude, ChatGPT</span>
+      <span><b>Edit first</b> the gold lines</span>
+    </div>
+  </header>
+
+  <hr class="double-rule">
+
+  <section>
+    <div class="legend">
+      <span class="swatch" aria-hidden="true"></span>
+      <span>Gold lines are the ones he changes. Everything else can stay exactly as written.</span>
+    </div>
+
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Prompt</th><th>Paste it into</th><th>How often</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1. The songwriter</strong></td><td>Grok Automations, saved once</td><td>Runs itself, daily at 05:00</td></tr>
+          <tr><td><strong>2. The builder</strong></td><td>Any coding AI, in a chat</td><td>Once, when he is tired of doing it by hand</td></tr>
+          <tr><td><strong>3. The rescuer</strong></td><td>Any AI, in a chat</td><td>Whenever something breaks</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="double-rule">
+
+  <!-- ============ PROMPT 1 ============ -->
+  <section>
+    <h2>1. The songwriter</h2>
+    <p class="kicker">Saved once inside Grok Automations. After that it arrives by email every morning without being asked.</p>
+    <p>
+      Set the schedule to <strong>daily at 05:00</strong> in his timezone and delivery to
+      <strong>email</strong>. The <code>===SECTION===</code> markers are not decoration: they are how
+      prompt 2's script finds each piece inside the email, so they should survive any editing he does.
+    </p>
+
+    <div class="promptbox">
+      <div class="promptbox-head">
+        <span class="promptbox-title">Prompt 1 &middot; el compositor</span>
+        <span class="promptbox-where">Grok Automations</span>
+        <button class="copybtn" type="button">Copiar</button>
+      </div>
+<pre><code>Eres compositor de m&uacute;sica cristiana en espa&ntilde;ol.
+
+<span class="edit">### EDITA SOLO ESTAS L&Iacute;NEAS ###</span>
+<span class="edit">MI CANAL: [nombre de tu canal]</span>
+<span class="edit">IDIOMA: espa&ntilde;ol neutro</span>
+<span class="edit">DURACI&Oacute;N OBJETIVO: 3:30</span>
+<span class="edit">ESTILO POR DEFECTO: latin worship ballad, acoustic guitar, male vocal, warm pads, 72 bpm</span>
+<span class="edit">TONO: esperanzado, &iacute;ntimo, nada triunfalista</span>
+<span class="edit">### FIN DE LA EDICI&Oacute;N ###</span>
+
+CADA D&Iacute;A:
+1. Busca en evangeliodeldia.org el Evangelio de hoy Y el comentario del d&iacute;a.
+2. Escribe una canci&oacute;n ORIGINAL inspirada en ese Evangelio.
+
+REGLAS DURAS
+- NO cites ni traduzcas el texto b&iacute;blico palabra por palabra. Parafrasea con
+  im&aacute;genes propias. La letra debe ser obra original m&iacute;a.
+- Toma el &aacute;ngulo teol&oacute;gico DEL COMENTARIO del d&iacute;a, no un resumen gen&eacute;rico
+  del pasaje. Ah&iacute; est&aacute; lo que hace la canci&oacute;n distinta.
+- Cantable: s&iacute;labas que caben en la respiraci&oacute;n, sin rimas forzadas.
+- Estructura: intro, verso 1, estribillo, verso 2, estribillo, puente,
+  estribillo final.
+- El estribillo se repite ID&Eacute;NTICO cada vez.
+- Nada de lenguaje de m&aacute;quina: si una l&iacute;nea suena a inteligencia
+  artificial, reescr&iacute;bela.
+
+DEVUELVE EXACTAMENTE ESTE FORMATO, sin texto adicional:
+
+===CITA===
+(la cita b&iacute;blica, ej: Lucas 1,39-56)
+===TITULO===
+(t&iacute;tulo de la canci&oacute;n, m&aacute;ximo 45 caracteres)
+===ESTILO===
+(etiquetas EN INGL&Eacute;S separadas por comas para el modelo musical;
+parte del ESTILO POR DEFECTO y aj&uacute;stalo al tono del Evangelio de hoy)
+===LETRA===
+[verse]
+...
+[chorus]
+...
+[verse]
+...
+[chorus]
+...
+[bridge]
+...
+[chorus]
+...
+===YT_TITULO===
+(t&iacute;tulo YouTube, incluye la cita y la fecha)
+===YT_DESC===
+(3 o 4 l&iacute;neas + la cita completa + "Letra original inspirada en el
+Evangelio del d&iacute;a." + 5 hashtags)
+===MINIATURA===
+(una frase de 4 a 6 palabras para la miniatura)
+===UNA_LINEA_PARA_TI===
+(una l&iacute;nea del estribillo que te sugiero reescribir con tus palabras)</code></pre>
+    </div>
+    <p class="cap">
+      The last block is deliberate. It hands him one specific line to rewrite each day, which is the
+      human creative input YouTube's policy requires, turned into a habit instead of a chore.
+    </p>
+
+    <div class="rubric">
+      <span class="rubric-label">Change the style line before anything else</span>
+      <p>
+        <code>ESTILO POR DEFECTO</code> is what decides whether the channel sounds like his church or
+        like a stock worship playlist. Try three or four different style strings over the first week
+        and keep the one that sounds like him. Everything else in this prompt can stay untouched for
+        months.
+      </p>
+    </div>
+  </section>
+
+  <hr class="double-rule">
+
+  <!-- ============ PROMPT 2 ============ -->
+  <section>
+    <h2>2. The builder</h2>
+    <p class="kicker">Paste this into a coding AI once, and it writes the script that does the rest of the work.</p>
+    <p>
+      Only worth running <strong>after he has made a few videos by hand</strong>. Automating a process
+      he has not performed yet produces a script that automates the wrong thing. Grok can write this,
+      as can Claude or ChatGPT, and any of them will hand back a file he saves as
+      <code>run_dia.py</code>.
+    </p>
+
+    <div class="promptbox">
+      <div class="promptbox-head">
+        <span class="promptbox-title">Prompt 2 &middot; el constructor</span>
+        <span class="promptbox-where">Any coding AI</span>
+        <button class="copybtn" type="button">Copiar</button>
+      </div>
+<pre><code>Act&uacute;a como ingeniero de software con experiencia en macOS y audio.
+Escr&iacute;beme UN solo script de Python 3 llamado run_dia.py.
+
+<span class="edit">### EDITA SOLO ESTAS L&Iacute;NEAS ###</span>
+<span class="edit">MI MAC: [M2 Pro, 32 GB de memoria unificada]</span>
+<span class="edit">CARPETA BASE: /Users/[tu-usuario]/gospel-song</span>
+<span class="edit">MODELO DE VOZ: voz/mi_voz.pth y voz/mi_voz.index</span>
+<span class="edit">IMAGEN DE FONDO: fondo.jpg</span>
+<span class="edit">IDIOMA DEL EVANGELIO: SP</span>
+<span class="edit">### FIN DE LA EDICI&Oacute;N ###</span>
+
+LO QUE YA TENGO INSTALADO Y FUNCIONANDO
+- Python 3.12, ffmpeg y git por Homebrew
+- gospel.py, que baja el Evangelio del d&iacute;a a un JSON
+- ACE-Step 1.5 en ~/ACE-Step-1.5 (lo lanzo con start_gradio_ui_macos.sh)
+- Applio en ~/Applio (lo lanzo con run-applio.sh)
+- demucs y whisperx instalados con pip
+
+EL FLUJO QUE QUIERO AUTOMATIZAR
+1. Leer el correo de Grok de hoy, o si es m&aacute;s simple, leer un archivo
+   letra.txt donde yo pego ese correo. Extraer los bloques marcados con
+   ===CITA===, ===TITULO===, ===ESTILO===, ===LETRA===, ===YT_TITULO===,
+   ===YT_DESC=== y ===MINIATURA===.
+2. Llamar a gospel.py para guardar el Evangelio del d&iacute;a como respaldo.
+3. Mandar LETRA y ESTILO a la API local de ACE-Step y guardar cancion.wav.
+4. Separar la voz con: demucs --two-stems=vocals cancion.wav
+5. Pasar el stem de voz por Applio con mi modelo de voz.
+6. Mezclar la voz convertida con el instrumental usando ffmpeg.
+7. Sacar los tiempos de las palabras con whisperx en espa&ntilde;ol y generar
+   un archivo .ass de subt&iacute;tulos.
+8. Renderizar un v&iacute;deo 1920x1080 con ffmpeg: la imagen de fondo con un
+   zoom lento y la letra encima. La duraci&oacute;n del zoom debe calcularse
+   de la duraci&oacute;n real del audio, no ser un n&uacute;mero fijo.
+9. Dejar todo en una carpeta salida/AAAA-MM-DD/ y ense&ntilde;arme un resumen.
+
+REGLAS DURAS
+- El script NUNCA sube nada a YouTube. Termina dej&aacute;ndome el MP4 listo
+  y yo lo subo a mano. Esto es a prop&oacute;sito, no lo "mejores".
+- Si un paso falla, PARA con un mensaje claro en espa&ntilde;ol que diga qu&eacute;
+  paso fue y qu&eacute; archivo esperaba. Nunca sigas con un archivo vac&iacute;o o
+  de cero bytes.
+- Antes de empezar, comprueba que existen todos los programas y archivos
+  que necesitas y dime cu&aacute;les faltan. No a mitad del proceso.
+- Si un archivo de salida ya existe, no lo pises: a&ntilde;ade un sufijo.
+- Todo el texto que me muestres, en espa&ntilde;ol.
+- Sin dependencias raras: solo lo que ya tengo instalado.
+
+QU&Eacute; QUIERO QUE ME DEVUELVAS
+1. El archivo run_dia.py completo, listo para pegar.
+2. Un requirements.txt.
+3. Los comandos para probar cada paso por separado, porque quiero
+   verificar el paso 3 antes de confiar en el 9.
+4. Una lista de lo que puede fallar y c&oacute;mo lo notar&iacute;a.
+
+Antes de escribir nada, hazme las preguntas que necesites.</code></pre>
+    </div>
+    <p class="cap">
+      That last line is what separates a usable script from a generic one. Without it these models
+      guess at the unstated details rather than asking.
+    </p>
+
+    <div class="rubric">
+      <span class="rubric-label">Two rules in there that he should not let anyone remove</span>
+      <p>
+        <strong>Never auto-upload.</strong> An AI reading this will often offer to add the YouTube
+        step as an improvement. Refuse it. The manual upload is the review gate that keeps the channel
+        compliant, and it costs twenty seconds.
+      </p>
+      <p>
+        <strong>Fail loudly.</strong> The expensive failure mode is a script that produces a silent
+        four minute video every morning for a week before anyone notices.
+      </p>
+    </div>
+  </section>
+
+  <hr class="double-rule">
+
+  <!-- ============ PROMPT 3 ============ -->
+  <section>
+    <h2>3. The rescuer</h2>
+    <p class="kicker">For the evening something breaks and you are not available to fix it.</p>
+    <p>
+      The reason this works better than describing the problem freehand is the last three rules. Left
+      to themselves, these models produce five possible causes and a wall of commands, which is
+      precisely the wrong shape of help for someone who does not write code.
+    </p>
+
+    <div class="promptbox">
+      <div class="promptbox-head">
+        <span class="promptbox-title">Prompt 3 &middot; el rescate</span>
+        <span class="promptbox-where">Any AI</span>
+        <button class="copybtn" type="button">Copiar</button>
+      </div>
+<pre><code>Algo se rompi&oacute; en mi flujo de trabajo y no soy programador.
+Ay&uacute;dame a arreglarlo.
+
+<span class="edit">### RELLENA ESTO ###</span>
+<span class="edit">MI MAC: [M2 Pro, 32 GB, macOS Sequoia]</span>
+<span class="edit">LO QUE EJECUT&Eacute;: [pega el comando exacto]</span>
+<span class="edit">LO QUE ESPERABA: [ej: un archivo cancion.wav de unos 3 minutos]</span>
+<span class="edit">LO QUE PAS&Oacute;: [pega el mensaje de error COMPLETO, sin recortar]</span>
+<span class="edit">LO QUE YA PROB&Eacute;: [nada, o lo que sea]</span>
+<span class="edit">### FIN ###</span>
+
+C&Oacute;MO QUIERO QUE ME AYUDES
+- Expl&iacute;camelo como si no supiera programar. Sin jerga sin traducir.
+- Dame LA causa m&aacute;s probable primero, no cinco opciones.
+- UN comando cada vez, y dime exactamente qu&eacute; deber&iacute;a ver en pantalla
+  si funcion&oacute;. Espera mi respuesta antes del siguiente.
+- Si un comando puede borrar o sobrescribir algo m&iacute;o, av&iacute;same antes.
+- Si necesitas ver un archivo o el resultado de algo, p&iacute;demelo.
+  No supongas.</code></pre>
+    </div>
+
+    <div class="note">
+      <p>
+        Tell him to paste the <strong>whole</strong> error, including the parts that look like noise.
+        The useful line is almost never the last one, and trimming it is the most common reason these
+        conversations go in circles.
+      </p>
+    </div>
+  </section>
+
+  <hr class="double-rule">
+
+  <section>
+    <h2>When to use which</h2>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Where he is</th><th>Use</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Week one, nothing installed</td><td><strong>Prompt 1 only</strong></td>
+            <td>Lyrics arrive daily while he decides whether the format is worth building.</td>
+          </tr>
+          <tr>
+            <td>Making videos by hand, about 15 min a day</td><td><strong>Prompt 1</strong></td>
+            <td>Still the right place to be. Do not automate a process that is still changing.</td>
+          </tr>
+          <tr>
+            <td>Same steps three weeks running, bored of it</td><td><strong>Prompt 2</strong></td>
+            <td>Now the process is stable, so a script can capture it without capturing a mistake.</td>
+          </tr>
+          <tr>
+            <td>Something stopped working</td><td><strong>Prompt 3</strong></td>
+            <td>Gets him unblocked without waiting for you.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rubric">
+      <span class="rubric-label">The order is the advice</span>
+      <p>
+        Prompt 2 is last for a reason. The failure mode of this whole project is building the
+        automation first, discovering the songs are not good, and then having to unpick a script to
+        change the format. Prompt 1 alone is a working channel. Everything after it is convenience.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      The copy buttons put the plain text on the clipboard, so the <code>### EDITA ###</code> markers
+      travel with it and the gold highlighting does not. If a browser blocks clipboard access, the
+      button selects the whole prompt instead and tells him which two keys to press.
+      Verified 16 August 2026.
+    </p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var boxes = document.querySelectorAll('.promptbox');
+  Array.prototype.forEach.call(boxes, function (box) {
+    var btn = box.querySelector('.copybtn');
+    var code = box.querySelector('pre code');
+    if (!btn || !code) return;
+
+    btn.addEventListener('click', function () {
+      var text = code.innerText;
+
+      var isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+
+      // ok: copied outright. selected: we could not reach the clipboard but the
+      // text is highlighted, so tell them which two keys finish the job.
+      function done(state) {
+        if (state === 'ok') {
+          btn.textContent = 'Copiado';
+          btn.setAttribute('data-done', '1');
+        } else {
+          btn.textContent = 'Pulsa ' + (isMac ? 'Cmd' : 'Ctrl') + '+C';
+        }
+        setTimeout(function () {
+          btn.textContent = 'Copiar';
+          btn.removeAttribute('data-done');
+        }, 2600);
+      }
+
+      // clipboard API needs a secure context and is blocked in some frames,
+      // so fall back to a hidden textarea before giving up
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '-1000px';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        if (!ok) {
+          var range = document.createRange();
+          range.selectNodeContents(code);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+        done(ok ? 'ok' : 'selected');
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done('ok'); }, fallback);
+      } else {
+        fallback();
+      }
+    });
+  });
+})();
+</script>

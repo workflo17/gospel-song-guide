@@ -366,55 +366,19 @@
           </p>
         </div>
 
-        <h4>Grok Automation prompt, paste as-is</h4>
-<pre><code>Eres compositor de m&uacute;sica cristiana en espa&ntilde;ol.
-
-CADA D&Iacute;A:
-1. Busca en evangeliodeldia.org el Evangelio de hoy y el comentario del d&iacute;a.
-2. Escribe una canci&oacute;n ORIGINAL inspirada en ese Evangelio.
-
-REGLAS DURAS
-- NO cites ni traduzcas el texto b&iacute;blico palabra por palabra. Parafrasea con
-  im&aacute;genes propias. La letra debe ser obra original.
-- Toma el &aacute;ngulo teol&oacute;gico del comentario del d&iacute;a, no un resumen gen&eacute;rico.
-- Espa&ntilde;ol neutro, cantable, sin rimas forzadas.
-- Duraci&oacute;n objetivo 3:30. Estructura: intro, verso 1, estribillo, verso 2,
-  estribillo, puente, estribillo final.
-- El estribillo debe caber en una respiraci&oacute;n y repetirse id&eacute;ntico.
-
-DEVUELVE EXACTAMENTE ESTE FORMATO, sin texto adicional:
-
-===CITA===
-(la cita b&iacute;blica, ej: Lucas 1,39-56)
-===TITULO===
-(t&iacute;tulo de la canci&oacute;n, m&aacute;x 45 caracteres)
-===ESTILO===
-(etiquetas EN INGL&Eacute;S separadas por comas para el modelo musical, ej:
-latin worship ballad, acoustic guitar, male vocal, warm pads, 72 bpm)
-===LETRA===
-[verse]
-...
-[chorus]
-...
-[verse]
-...
-[chorus]
-...
-[bridge]
-...
-[chorus]
-...
-===YT_TITULO===
-(t&iacute;tulo YouTube, incluye la cita y la fecha)
-===YT_DESC===
-(3 a 4 l&iacute;neas + la cita completa + "Letra original inspirada en el
-Evangelio del d&iacute;a." + 5 hashtags)
-===MINIATURA===
-(una frase de 4 a 6 palabras para la miniatura)</code></pre>
-        <p class="cap">
-          The <code>===SECTION===</code> delimiters exist so a script can split the email body with one
-          regex. The <code>[verse]</code> / <code>[chorus]</code> tags are what ACE-Step reads to
-          structure the song, so they must stay in English even though the lyrics are Spanish.
+        <h4>The prompt itself lives on its own page</h4>
+        <p>
+          The full Spanish prompt, with every editable line marked and a copy button, is on the
+          <a href="https://workflo17.github.io/gospel-song-guide/prompts.html">Prompts page</a>,
+          alongside two others: one that builds the automation script, and one for when something
+          breaks. Keeping them in one place stops the version he pastes from drifting away from the
+          version documented here.
+        </p>
+        <p>
+          The shape that matters: it returns fixed <code>===SECTION===</code> delimiters so a script
+          can split the email with one regex, and the <code>[verse]</code> and <code>[chorus]</code>
+          tags stay in English because that is what ACE-Step reads to structure the song, even though
+          the lyrics themselves are Spanish.
         </p>
 
         <p>

@@ -19,6 +19,7 @@ OUT = ROOT / "docs"
 PAGES = [
     ("workflow.html", "index.html", "The pipeline"),
     ("mac-setup.html", "mac.html", "Mac setup"),
+    ("prompts.html", "prompts.html", "Prompts"),
 ]
 
 NAV_CSS = """
