@@ -332,7 +332,7 @@
     </p>
     <div class="meta-strip">
       <span><b>You need</b> a Mac and a Google account</span>
-      <span><b>One-time setup</b> about 3 hours, spread over 2 evenings</span>
+      <span><b>One-time setup</b> about 4 hours, spread over 2 evenings</span>
       <span><b>Then daily</b> about 20 minutes</span>
       <span><b>Cost</b> nothing</span>
     </div>
@@ -356,7 +356,7 @@
       <table>
         <thead><tr><th>Part</th><th>What happens</th><th>How often</th><th>Time</th></tr></thead>
         <tbody>
-          <tr><td><strong>1</strong></td><td>You record yourself singing</td><td>Once, ever</td><td>45 min</td></tr>
+          <tr><td><strong>1</strong></td><td>You record yourself singing, and set up the audio tool</td><td>Once, ever</td><td>1 to 1.5 hours</td></tr>
           <tr><td><strong>2</strong></td><td>A computer learns your voice</td><td>Once, ever</td><td>20 min, then an hour of waiting</td></tr>
           <tr><td><strong>3</strong></td><td>You install ACE-Step</td><td>Once, ever</td><td>1 hour, mostly waiting</td></tr>
           <tr><td><strong>4</strong></td><td>You turn today's lyrics into a song</td><td>Every day</td><td>10 min</td></tr>
@@ -489,30 +489,202 @@
   <div class="session">
     <div class="session-num">4</div>
     <div class="session-body">
+      <h2>Check whether your Mac already has the audio tool</h2>
+      <span class="timebox">1 minute</span><span class="who">You, alone</span>
+      <p>
+        Cutting the recording up needs a free program called <strong>ffmpeg</strong>. Your Mac does not
+        come with it. Before anything else, find out whether it is already there.
+      </p>
+      <p>
+        Open Terminal: hold <strong>Command</strong>, press <strong>Space</strong>, type
+        <strong>Terminal</strong>, press <strong>Return</strong>. Then paste this line and press Return:
+      </p>
+      <div class="cmd">ffmpeg -version</div>
+      <p>You get one of exactly two answers, and they send you to different places:</p>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>What Terminal says</th><th>What it means</th><th>Where to go</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Lots of text starting <code>ffmpeg version 7...</code></td>
+              <td class="yes">You already have it</td>
+              <td><strong>Skip step 5 completely.</strong> Go straight to step 6.</td>
+            </tr>
+            <tr>
+              <td><code>command not found: ffmpeg</code></td>
+              <td class="no">Not installed yet</td>
+              <td>Do step 5 first, then carry on.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 5 ============ -->
+  <div class="session">
+    <div class="session-num">5</div>
+    <div class="session-body">
+      <h2>Install the audio tool</h2>
+      <span class="timebox">20 to 30 minutes, mostly waiting</span><span class="who">Only if step 4 said "command not found"</span>
+      <p>
+        This is the longest one-time step on the page, and nearly all of it is your Mac downloading
+        quietly. Four boxes, in order. Let each one finish before starting the next.
+      </p>
+
+      <p><strong>Box 1.</strong> Apple's developer tools. Nothing else installs without these.</p>
+      <div class="cmd">xcode-select --install</div>
+      <p>
+        A window pops up. Click <strong>Install</strong> and wait. If Terminal instead tells you it is
+        already installed, that is a pass, move on.
+      </p>
+
+      <p><strong>Box 2.</strong> Homebrew, which is the thing that fetches ffmpeg for you.</p>
+      <div class="cmd">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</div>
+
+      <div class="big-warn">
+        <p>
+          <strong>It will ask for your Mac password.</strong> As you type, nothing appears on screen. No
+          dots, no stars, nothing at all. That is normal and it is not broken. Type your password anyway
+          and press <strong>Return</strong>.
+        </p>
+      </div>
+
+      <p>
+        <strong>Box 3.</strong> This is the one everybody skips, and skipping it makes everything
+        afterwards look broken. Homebrew puts itself somewhere Terminal does not check by default. These
+        two lines tell Terminal where to look.
+      </p>
+      <div class="cmd">echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' &gt;&gt; ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"</div>
+
+      <p><strong>Box 4.</strong> Finally ffmpeg itself. This is the slow one, roughly 10 to 20 minutes.</p>
+      <div class="cmd">brew install ffmpeg</div>
+
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>Paste <code>ffmpeg -version</code> again. This time it prints a wall of text instead of "command not found".</p>
+      </div>
+      <div class="note">
+        <p>
+          If it still says command not found, quit Terminal completely with <strong>Command and Q</strong>,
+          not the red dot on the window, and open it again. Box 3 only takes effect in a fresh Terminal.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 6 ============ -->
+  <div class="session">
+    <div class="session-num">6</div>
+    <div class="session-body">
+      <h2>Make sure the Mac can find your recording</h2>
+      <span class="timebox">2 minutes</span><span class="who">You, alone</span>
+      <p>
+        The next step looks for a file called exactly <strong>canto.wav</strong> inside your
+        <strong>gospel-song</strong> folder. Check it is really there before running anything.
+      </p>
+      <div class="cmd">ls ~/gospel-song</div>
+      <p>That lists what is in the folder. You want <code>canto.wav</code> in the list.</p>
+
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>What you see</th><th>What to do about it</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>canto.wav</code> is listed</td>
+              <td class="yes">Good. Go to step 7.</td>
+            </tr>
+            <tr>
+              <td><code>No such file or directory</code></td>
+              <td>The folder does not exist yet. Paste <code>mkdir -p ~/gospel-song</code>, drag your recording into it, then try again.</td>
+            </tr>
+            <tr>
+              <td>A different name, like <code>canto 1.wav</code></td>
+              <td>Rename it. In Finder click the file once, press <strong>Return</strong>, type <code>canto.wav</code>, press <strong>Return</strong> again.</td>
+            </tr>
+            <tr>
+              <td><code>canto.wav.wav</code></td>
+              <td>You typed the ending twice, because Finder was hiding it. Rename it to just <code>canto</code> and Finder keeps the real ending.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p>
+          Finder hides file endings by default, so something showing as <strong>canto</strong> in Finder
+          is usually <strong>canto.wav</strong> underneath. <code>ls</code> always shows the real full
+          name, which is why this step uses it rather than your eyes.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 7 ============ -->
+  <div class="session">
+    <div class="session-num">7</div>
+    <div class="session-body">
       <h2>Cut the recording into small pieces</h2>
       <span class="timebox">2 minutes</span><span class="who">You, alone</span>
       <p>
-        The training program cannot use one long recording. It needs many short ones. This command chops
-        your recording into ten second pieces automatically. You do not have to do it by hand.
+        The training program cannot use one long recording. It needs many short ones. This chops yours
+        into ten second pieces automatically. None of it is done by hand.
       </p>
-      <span class="cmd-label">Paste this into Terminal</span>
+      <span class="cmd-label">Paste all three lines at once</span>
       <div class="cmd">cd ~/gospel-song
 mkdir -p dataset
 ffmpeg -i canto.wav -f segment -segment_time 10 -ac 1 -ar 44100 -c:a pcm_s16le dataset/voz_%03d.wav</div>
       <p>
-        Text will scroll past for a few seconds. When it stops and you get a fresh line, it is done.
+        Text scrolls past for a few seconds. When it stops and you get a fresh line with a blinking
+        cursor, it has finished. You do not need to read any of it.
       </p>
+      <p>Now count what you got:</p>
+      <div class="cmd">ls ~/gospel-song/dataset | wc -l</div>
       <p>
-        Now open the new <strong>dataset</strong> folder in Finder and click through a few files. Press
-        <strong>Space</strong> to hear one without opening anything. Delete any that are silence, a cough,
-        or you clearing your throat. You do not need to check all of them, just remove the obvious duds.
+        That prints one number: how many pieces were made. Ten minutes of singing gives about 60. Thirty
+        minutes gives about 180.
+      </p>
+      <div class="checkpoint">
+        <span class="checkpoint-label">You should see</span>
+        <p>A number of <strong>60 or higher</strong>. If it says 5, the recording was too short and you need to sing more.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 8 ============ -->
+  <div class="session">
+    <div class="session-num">8</div>
+    <div class="session-body">
+      <h2>Listen through and throw away the bad pieces</h2>
+      <span class="timebox">10 minutes</span><span class="who">You, alone</span>
+      <p>This opens the folder in an ordinary Finder window, so you do not have to go hunting for it:</p>
+      <div class="cmd">open ~/gospel-song/dataset</div>
+      <p>Then, in that Finder window:</p>
+      <ol class="howto">
+        <li>Press <strong>Command</strong> and <strong>2</strong> for list view, so you can see them all at once.</li>
+        <li>Click the first file once. Do not double click, that opens a music app you do not need.</li>
+        <li>Press the <strong>Space bar</strong>. The clip plays in a small preview window.</li>
+        <li>Press the <strong>down arrow</strong> for the next file. It keeps playing each one as you move, so you can go through them fast.</li>
+        <li>When you hit a bad one, press <strong>Command</strong> and <strong>Delete</strong> to bin it, then carry on down.</li>
+        <li>Press <strong>Space</strong> again to close the preview when you are finished.</li>
+      </ol>
+      <p>
+        A bad one is silence, a cough, throat clearing, a false start, or the very last piece if it cuts
+        off mid word. You do not have to check every file. Ten minutes of skimming is plenty.
       </p>
       <div class="checkpoint">
         <span class="checkpoint-label">You should see</span>
         <p>
-          A <strong>dataset</strong> folder holding at least 60 files named <code>voz_001.wav</code>,
-          <code>voz_002.wav</code> and so on. Three picked at random are you singing, clearly, with no
-          background noise.
+          At least 60 files still there after deleting, named <code>voz_001.wav</code>,
+          <code>voz_002.wav</code> and so on. Three picked at random are you singing clearly, with no
+          background noise and no long silence.
+        </p>
+      </div>
+      <div class="note">
+        <p>
+          If deleting left you under 60, the recording had too much dead air in it. Record another ten
+          minutes and run step 7 again. More good material always beats less.
         </p>
       </div>
     </div>
@@ -532,9 +704,9 @@ ffmpeg -i canto.wav -f segment -segment_time 10 -ac 1 -ar 44100 -c:a pcm_s16le d
     </p>
   </div>
 
-  <!-- ============ 5 ============ -->
+  <!-- ============ 9 ============ -->
   <div class="session">
-    <div class="session-num">5</div>
+    <div class="session-num">9</div>
     <div class="session-body">
       <h2>Put your recordings on Google Drive</h2>
       <span class="timebox">10 minutes</span><span class="who">You, alone</span>
@@ -550,9 +722,9 @@ ffmpeg -i canto.wav -f segment -segment_time 10 -ac 1 -ar 44100 -c:a pcm_s16le d
     </div>
   </div>
 
-  <!-- ============ 6 ============ -->
+  <!-- ============ 10 ============ -->
   <div class="session">
-    <div class="session-num">6</div>
+    <div class="session-num">10</div>
     <div class="session-body">
       <h2>Start the training</h2>
       <span class="timebox">20 minutes of clicking, then an hour of waiting</span><span class="who">You, alone</span>
@@ -582,9 +754,9 @@ ffmpeg -i canto.wav -f segment -segment_time 10 -ac 1 -ar 44100 -c:a pcm_s16le d
     </div>
   </div>
 
-  <!-- ============ 7 ============ -->
+  <!-- ============ 11 ============ -->
   <div class="session">
-    <div class="session-num">7</div>
+    <div class="session-num">11</div>
     <div class="session-body">
       <h2>Download your voice and keep it safe</h2>
       <span class="timebox">5 minutes</span><span class="who">You, alone</span>
@@ -614,9 +786,9 @@ ffmpeg -i canto.wav -f segment -segment_time 10 -ac 1 -ar 44100 -c:a pcm_s16le d
   <h2>Part 3: Install ACE-Step <span class="once">Once, ever</span></h2>
   <p class="kicker">Four boxes to paste. Most of the time is the Mac downloading in the background.</p>
 
-  <!-- ============ 8 ============ -->
+  <!-- ============ 12 ============ -->
   <div class="session">
-    <div class="session-num">8</div>
+    <div class="session-num">12</div>
     <div class="session-body">
       <h2>Install the helper, then restart Terminal</h2>
       <span class="timebox">5 minutes</span><span class="who">You, alone</span>
@@ -641,9 +813,9 @@ ffmpeg -i canto.wav -f segment -segment_time 10 -ac 1 -ar 44100 -c:a pcm_s16le d
     </div>
   </div>
 
-  <!-- ============ 9 ============ -->
+  <!-- ============ 13 ============ -->
   <div class="session">
-    <div class="session-num">9</div>
+    <div class="session-num">13</div>
     <div class="session-body">
       <h2>Download ACE-Step</h2>
       <span class="timebox">10 to 15 minutes, mostly waiting</span><span class="who">You, alone</span>
@@ -663,9 +835,9 @@ uv sync</div>
     </div>
   </div>
 
-  <!-- ============ 10 ============ -->
+  <!-- ============ 14 ============ -->
   <div class="session">
-    <div class="session-num">10</div>
+    <div class="session-num">14</div>
     <div class="session-body">
       <h2>Start it for the first time</h2>
       <span class="timebox">5 minutes, then up to 40 of downloading</span><span class="who">You, alone</span>
@@ -697,9 +869,9 @@ chmod +x start_gradio_ui_macos.sh
 
   <h2>Part 4: Turn today's lyrics into a song <span class="daily">Every day</span></h2>
 
-  <!-- ============ 11 ============ -->
+  <!-- ============ 15 ============ -->
   <div class="session">
-    <div class="session-num">11</div>
+    <div class="session-num">15</div>
     <div class="session-body">
       <h2>Yes, you copy and paste straight from Grok</h2>
       <span class="timebox">3 minutes</span><span class="who">You, alone</span>
@@ -747,9 +919,9 @@ Salio de madrugada a buscar
     </div>
   </div>
 
-  <!-- ============ 12 ============ -->
+  <!-- ============ 16 ============ -->
   <div class="session">
-    <div class="session-num">12</div>
+    <div class="session-num">16</div>
     <div class="session-body">
       <h2>Make the song</h2>
       <span class="timebox">5 minutes</span><span class="who">You, alone</span>
@@ -785,9 +957,9 @@ Salio de madrugada a buscar
 
   <h2>Part 5: Put your voice on it <span class="daily">Every day</span></h2>
 
-  <!-- ============ 13 ============ -->
+  <!-- ============ 17 ============ -->
   <div class="session">
-    <div class="session-num">13</div>
+    <div class="session-num">17</div>
     <div class="session-body">
       <h2>Separate the singing from the instruments</h2>
       <span class="timebox">2 minutes</span><span class="who">You, alone</span>
@@ -809,9 +981,9 @@ demucs --two-stems=vocals cancion.wav</div>
     </div>
   </div>
 
-  <!-- ============ 14 ============ -->
+  <!-- ============ 18 ============ -->
   <div class="session">
-    <div class="session-num">14</div>
+    <div class="session-num">18</div>
     <div class="session-body">
       <h2>Open Applio and load your voice</h2>
       <span class="timebox">5 minutes</span><span class="who">You, alone, every day</span>
@@ -841,15 +1013,15 @@ demucs --two-stems=vocals cancion.wav</div>
     </div>
   </div>
 
-  <!-- ============ 15 ============ -->
+  <!-- ============ 19 ============ -->
   <div class="session">
-    <div class="session-num">15</div>
+    <div class="session-num">19</div>
     <div class="session-body">
       <h2>Convert the singing to your voice</h2>
       <span class="timebox">5 minutes</span><span class="who">You, alone</span>
       <ol class="howto">
         <li>Choose your voice in <strong>Voice Model</strong> and its match in <strong>Index File</strong>.</li>
-        <li>Under <strong>Upload Audio</strong>, drag in <code>vocals.wav</code> from the folder step 13 made. Or click the box and browse to it.</li>
+        <li>Under <strong>Upload Audio</strong>, drag in <code>vocals.wav</code> from the folder step 17 made. Or click the box and browse to it.</li>
         <li>Tick the box that says <strong>I agree to the terms of use</strong>.</li>
         <li>Click <strong>Convert</strong> and wait a few seconds.</li>
         <li>Click <strong>Export Audio</strong> to download the result.</li>
@@ -870,9 +1042,9 @@ demucs --two-stems=vocals cancion.wav</div>
     </div>
   </div>
 
-  <!-- ============ 16 ============ -->
+  <!-- ============ 20 ============ -->
   <div class="session">
-    <div class="session-num">16</div>
+    <div class="session-num">20</div>
     <div class="session-body">
       <h2>Put the song back together</h2>
       <span class="timebox">1 minute</span><span class="who">You, alone</span>
@@ -967,7 +1139,7 @@ ffmpeg -i separated/htdemucs/cancion/no_vocals.wav -i vocals_clonada.wav -filter
           <tr>
             <td>The browser page stopped responding</td>
             <td>You closed the Terminal window</td>
-            <td>That window was the app. Start it again with the command from step 12.</td>
+            <td>That window was the app. Start it again with the command from step 16.</td>
           </tr>
         </tbody>
       </table>
